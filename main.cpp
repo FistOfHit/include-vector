@@ -220,15 +220,15 @@ int **apply_filter(int **image, int width, int height,
 		for (int i = 0; i < (width - 1); i++) {
 			for (int j = 0; j < (height - 1); j++) {
 
-				filtered_image[i][j] = -1 * image[0][0] +
-									   -1 * image[0][1] + 
-									   -1 * image[0][2] +
-									   -1 * image[1][0] +
-										8 * image[1][1] +
-									   -1 * image[1][2] +
-									   -1 * image[2][0] +
-									   -1 * image[2][1] +
-									   -1 * image[2][2];
+				filtered_image[i][j] = -1 * image[i-1][j-1] +
+									   -1 * image[i-1][j] + 
+									   -1 * image[i-1][j+1] +
+									   -1 * image[i][j-1] +
+										8 * image[i][j] +
+									   -1 * image[i][j+1] +
+									   -1 * image[i+1][j-1] +
+									   -1 * image[i+1][j] +
+									   -1 * image[i+1][j+1];
 
 			};
 		};
@@ -241,11 +241,11 @@ int **apply_filter(int **image, int width, int height,
 		for (int i = 0; i < (width - 1); i++) {
 			for (int j = 0; j < (height - 1); j++) {
 
-				filtered_image[i][j] = -1 * image[0][1] +
-									   -1 * image[1][0] +
-										4 * image[1][1] +
-									   -1 * image[1][2] +
-									   -1 * image[2][1];
+				filtered_image[i][j] = -1 * image[i][j-1] +
+									   -1 * image[i-1][j] +
+										4 * image[i][j] +
+									   -1 * image[i+1][j] +
+									   -1 * image[i][j+1];
 
 			};
 		};

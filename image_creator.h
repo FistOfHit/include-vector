@@ -18,11 +18,11 @@
 	--------
 	int	*image: (pointer to) 2D array filled with 0's
 */
-template<typename type>
-type **create_image(int width, int height) {
+template<typename T>
+T **create_image(int width, int height) {
 
 	// allocate 2D array
-	type **image = new type[width][height];
+	T **image = new T[width][height];
 
 	// Fill with 0s in both dimensions
 	for (int i = 0; i < width; i++) {

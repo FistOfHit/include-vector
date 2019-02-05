@@ -11,15 +11,22 @@ int main()
 
 	BMP_img img(filename);
 
-	for (int i = 0; i < 999; i++)
+	for (int i = 0; i < 99; i++)
 	{
 		if (i % 3 == 0) cout << '\n';
 		cout << +img.data_pointer[i] << "\t";
 	}
 
-	img.color_inversion();
+	img.grey_scale("NTSC");
+	img.convolution_filter("omni");
 
-	img.save("test.bmp");
+	for (int i = 0; i < 99; i++)
+	{
+		if (i % 3 == 0) cout << '\n';
+		cout << +img.data_pointer[i] << "\t";
+	}
+
+	img.save("test_conv1.bmp");
 
 	system("pause");
 }

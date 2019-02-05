@@ -7,8 +7,6 @@ public:
 
 	string filename = "null_path";
 	char unsigned meta_data[54];
-	//int8_t * data_pointer = nullptr;
-	//unsigned char * data_pointer = nullptr;
 	uint8_t * data_pointer = nullptr;
 	int dim_x = -1;
 	int dim_y = -1;
@@ -16,6 +14,8 @@ public:
 
 	virtual void load(string path) = 0;
 	virtual void save(string path) = 0;
+
+	virtual int i(int row, int col, int rgb) = 0;
 
 	~Image()
 	{
@@ -35,5 +35,11 @@ public:
 
 	void load(string path);
 
+	int i(int row, int col, int rgb);
+
 	void color_inversion();
+
+	void grey_scale(string method);
+
+	void convolution_filter(string method);
 };

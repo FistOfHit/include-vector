@@ -26,7 +26,7 @@ int main()
 		cout << +img.data_pointer[i] << "\t";
 	}
 
-	img.save("test_conv1.bmp");
+	img.save("test_conv.bmp");
 
 	system("pause");
 }

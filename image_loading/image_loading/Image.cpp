@@ -186,17 +186,23 @@ void BMP_img::convolution_filter(string method)
 	delete[] this->data_pointer;
 	this->data_pointer = scaled_filtered;
 	
+}
 
-		// bi-directional method
-	//else if (method == "bi")
-	//	for (int i = 1; i < (this->dim_y - 1); i++) // row i
-	//		for (int j = 1; j < (this->dim_x - 1); j++)  // col j
-	//			for (int n = 0; n < 3; n++)  // color n
-	//			{
-	//				*(this->i(i, j, n)) = -1 * *(this->i(i - 1, j, n)) +
-	//									   -1 * *(this->i(i, j - 1, n)) +
-	//									    4 * *(this->i(i, j, n)) +
-	//									   -1 * *(this->i(i, j + 1, n)) +
-	//									   -1 * *(this->i(i + 1, j, n));
-	//			}
+void BMP_img::dicom_to_bmp(string dicom_filename, string target_filename) {
+
+	// Non-variable components of command
+	string converter_path = "C:/ProgramData/chocolatey/lib/dcmtk/tools/dcmtk-3.6.4-win64-dynamic/bin/dcmj2pnm.exe "; // if installed correctly via setup.bat...
+	string write_tag = "--write-bmp ";
+	string space = " "; // cba to figure out how to add a space otherwise
+
+	// Constructing command
+	string convert_command = converter_path +
+							 write_tag      +
+							 dicom_filename +
+							 space          +
+							 target_filename;
+
+	// Using system (no pipes needed)
+	system(convert_command.c_str());
+
 }

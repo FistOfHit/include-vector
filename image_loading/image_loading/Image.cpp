@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Header.h"
 #include "image.h"
 
@@ -64,7 +65,7 @@ int BMP_img::i(int row, int col, int rgb)
 	assert(this->dim_y > row && row >= 0);
 	assert(this->dim_x > col && col >= 0);
 
-	return (int)((row * this->dim_x + col) * 3 + rgb);
+	return (int)(((row * this->dim_x + col) * 3) + rgb);
 }
 
 
@@ -117,27 +118,70 @@ void BMP_img::grey_scale(string method)
 
 void BMP_img::convolution_filter(string method)
 {
-	uint8_t * tmp = new uint8_t[this->size];
+	float * raw_filtered = new float[this->size];
+	uint8_t * scaled_filtered = new uint8_t[this->size];
+
+	float min_intensity = 0;
+	float max_intensity = 0;
 
 		// omni-directional method
-	if (method == "omni")
+	if (method == "omni") {
+
 		for (int i = 1; i < (this->dim_y - 1); i++) // row i
 			for (int j = 1; j < (this->dim_x - 1); j++)  // col j
 				for (int n = 0; n < 3; n++)  // color n
 				{
-					tmp[this->i(i, j, n)] = -0 * this->data_pointer[this->i(i-1, j-1, n)] +
-						                    -0 * this->data_pointer[this->i(i-1, j,   n)] +
-						                    -0 * this->data_pointer[this->i(i-1, j+1, n)] +
-						                    -0 * this->data_pointer[this->i(i  , j-1, n)] +
-						                     1 * this->data_pointer[this->i(i  , j  , n)] +
-						                    -0 * this->data_pointer[this->i(i  , j+1, n)] +
-						                    -0 * this->data_pointer[this->i(i+1, j-1, n)] +
-						                    -0 * this->data_pointer[this->i(i+1, j  , n)] +
-						                    -0 * this->data_pointer[this->i(i+1, j+1, n)];
+					// Apply filter to each pixel (in new memory)
+					raw_filtered[this->i(i, j, n)] = -1 * this->data_pointer[this->i(i-1, j-1, n)] +
+												 	 -1 * this->data_pointer[this->i(i-1, j,   n)] +
+													 -1 * this->data_pointer[this->i(i-1, j+1, n)] +
+													 -1 * this->data_pointer[this->i(i  , j-1, n)] +
+													  8 * this->data_pointer[this->i(i  , j  , n)] +
+													 -1 * this->data_pointer[this->i(i  , j+1, n)] +
+													 -1 * this->data_pointer[this->i(i+1, j-1, n)] +
+													 -1 * this->data_pointer[this->i(i+1, j  , n)] +
+													 -1 * this->data_pointer[this->i(i+1, j+1, n)];
+
+					// find min and max intensities after raw filtered data
+					min_intensity= min(raw_filtered[this->i(i, j, n)], min_intensity);
+					max_intensity = max(raw_filtered[this->i(i, j, n)], max_intensity);
+
 				}
 
+	}
+	else if (method == "bi") {
+
+		for (int i = 1; i < (this->dim_y - 1); i++) // row i
+			for (int j = 1; j < (this->dim_x - 1); j++)  // col j
+				for (int n = 0; n < 3; n++)  // color n
+				{
+					// Apply filter to each pixel (in new memory)
+					raw_filtered[this->i(i, j, n)] = -1 * this->data_pointer[this->i(i-1, j,   n)] +
+													 -1 * this->data_pointer[this->i(i  , j-1, n)] +
+													  4 * this->data_pointer[this->i(i  , j,   n)] +
+													 -1 * this->data_pointer[this->i(i  , j+1, n)] +
+													 -1 * this->data_pointer[this->i(i+1, j,   n)];
+
+					// find min and max intensities after raw filtered data
+					min_intensity = min(raw_filtered[this->i(i, j, n)], min_intensity);
+					max_intensity = max(raw_filtered[this->i(i, j, n)], max_intensity);
+
+				}
+
+	}
+
+	// Scaling intensities onto an 8-bit unsigned data-type 
+	for (int i = 1; i < (this->dim_y - 1); i++) // row i
+		for (int j = 1; j < (this->dim_x - 1); j++)  // col j
+			for (int n = 0; n < 3; n++)  // color n
+			{
+				raw_filtered[this->i(i, j, n)] = (raw_filtered[this->i(i, j, n)] - min_intensity) *
+					(255.0f / max_intensity);
+				scaled_filtered[this->i(i, j, n)] = (uint8_t)raw_filtered[this->i(i, j, n)];
+			}
+
 	delete[] this->data_pointer;
-	this->data_pointer = tmp;
+	this->data_pointer = scaled_filtered;
 	
 
 		// bi-directional method

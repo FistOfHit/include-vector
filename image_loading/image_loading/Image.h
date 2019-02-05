@@ -42,4 +42,7 @@ public:
 	void grey_scale(string method);
 
 	void convolution_filter(string method);
+
+	void dicom_to_bmp(string dicom_filename, string target_filename);
+
 };

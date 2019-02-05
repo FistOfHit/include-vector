@@ -8,6 +8,7 @@ int main()
 	string filename;
 	cout << "gimme a file name bruh: ";
 	cin >> filename;
+	img.dicom_to_bmp("test12signedPositive.dcm", filename);
 
 	BMP_img img(filename);
 

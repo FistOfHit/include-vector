@@ -96,7 +96,7 @@ void BMP_img::grey_scale(string method)
 	}
 	else
 	{
-		_RAISE("Method Unknown");
+		_RAISE("Greyscaling method Unknown");
 	}
 
 		// set the new color value
@@ -148,8 +148,7 @@ void BMP_img::convolution_filter(string method)
 
 				}
 
-	}
-	else if (method == "bi") {
+	} else if (method == "bi") {
 
 		for (int i = 1; i < (this->dim_y - 1); i++) // row i
 			for (int j = 1; j < (this->dim_x - 1); j++)  // col j
@@ -167,6 +166,10 @@ void BMP_img::convolution_filter(string method)
 					max_intensity = max(raw_filtered[this->i(i, j, n)], max_intensity);
 
 				}
+
+	} else {
+
+		_RAISE("Filtering method Unknown");
 
 	}
 

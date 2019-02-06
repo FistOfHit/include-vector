@@ -1,4 +1,3 @@
-#include <algorithm>
 #include "Header.h"
 #include "image.h"
 
@@ -44,7 +43,7 @@ void BMP_img::load(string path)
 }
 
 
-void BMP_img::save(string name)
+void BMP_img::save_bmp(string name)
 {
 		// create output file
 	ofstream save_file(name, ios::binary);
@@ -54,6 +53,9 @@ void BMP_img::save(string name)
 
 		// write the data
 	save_file.write((char *)this->data_pointer, this->size);
+
+		// update the filename property
+	this->filename = name;
 }
 
 
@@ -188,21 +190,58 @@ void BMP_img::convolution_filter(string method)
 	
 }
 
-void BMP_img::dicom_to_bmp(string dicom_filename, string target_filename) {
 
-	// Non-variable components of command
-	string converter_path = "C:/ProgramData/chocolatey/lib/dcmtk/tools/dcmtk-3.6.4-win64-dynamic/bin/dcmj2pnm.exe "; // if installed correctly via setup.bat...
-	string write_tag = "--write-bmp ";
-	string space = " "; // cba to figure out how to add a space otherwise
+DICOM_img::DICOM_img(string path)
+{
+		// check the file extension is correct
+	char * ptr = &path.back();
+	if (*(ptr - 2) != 'd' || *(ptr - 1) != 'c' || *(ptr) != 'm')
+	{
+		cerr << "file extenion must be '.dcm'";
+		_RAISE();
+	}
 
-	// Constructing command
-	string convert_command = converter_path +
-							 write_tag      +
-							 dicom_filename +
-							 space          +
-							 target_filename;
+		// check the file exists
+	ifstream f(path.c_str());
+	if (!f.good())
+	{
+		cerr << "could not find file: " + path;
+		_RAISE();
+	}
 
-	// Using system (no pipes needed)
+		// save the file name for function call
+	this->filename = path;
+}
+
+	// create a .bmp file
+void DICOM_img::save_bmp(string name)
+{
+		// if installed correctly via setup.bat...
+	string const converter_path = "C:/ProgramData/chocolatey/lib/dcmtk/tools/dcmtk-3.6.4-win64-dynamic/bin/dcmj2pnm.exe ";
+
+		// Constructing command
+	string convert_command = converter_path + "--write-bmp " + this->filename + " " + name;
+
+		// Using system (no pipes needed)
 	system(convert_command.c_str());
 
+	cout << "\nFile" + name + " created\n";
 }
+
+	// create a BMP_img object (by saving then deleting a file)
+BMP_img * DICOM_img::convert_bmp()
+{
+		// create bmp file
+	const string name = "tmp.bmp";
+	this->save_bmp(name);
+		
+		// load as object
+	BMP_img obj(name);
+
+		// delete file and reset name
+	obj.filename = "";
+	remove(name.c_str());
+
+	return &obj;
+}
+

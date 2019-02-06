@@ -5,6 +5,7 @@ class Image
 {
 public:
 
+		// properties of the image
 	string filename = "null_path";
 	char unsigned meta_data[54];
 	uint8_t * data_pointer = nullptr;
@@ -12,10 +13,8 @@ public:
 	int dim_y = -1;
 	int size = -1;
 
-	virtual void load(string path) = 0;
-	virtual void save(string path) = 0;
-
-	virtual int i(int row, int col, int rgb) = 0;
+		// save and load funciton
+	virtual void save_bmp(string path) = 0;
 
 	~Image()
 	{
@@ -28,21 +27,33 @@ public:
 class BMP_img : public Image
 {
 public:
-
+		// requiered functions
 	BMP_img(string path);
-
-	void save(string name);
-
 	void load(string path);
+	void save_bmp(string name);
 
+		// index a pixle
 	int i(int row, int col, int rgb);
 
+		// different filters
 	void color_inversion();
 
 	void grey_scale(string method);
 
 	void convolution_filter(string method);
 
-	void dicom_to_bmp(string dicom_filename, string target_filename);
+		// save as other file formats
+	//void dicom_to_bmp(string dicom_filename, string target_filename);
 
+};
+
+class DICOM_img : public Image
+{
+public:
+		// requiered functions
+	DICOM_img(string path);
+	void save_bmp(string name);
+
+		// create BMP_img object
+	BMP_img * convert_bmp();
 };

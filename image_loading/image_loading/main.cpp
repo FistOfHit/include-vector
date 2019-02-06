@@ -1,33 +1,83 @@
 #include "Header.h"
 #include "image.h"
 
-	// test loading an image file
+
+
+	// test dicom convert
 int main()
 {
-	
+		// take user input to load a file
 	string filename;
-	cout << "gimme a file name bruh: ";
+	cout << "gimme a .dmc file name bruh: ";
 	cin >> filename;
-	img.dicom_to_bmp("test12signedPositive.dcm", filename);
 
-	BMP_img img(filename);
+		// load dmc image
+	DICOM_img dmc(filename);
+		// convert to bmp
+	BMP_img img = *(dmc.convert_bmp());
 
+		// print first 33 pixles
 	for (int i = 0; i < 99; i++)
 	{
 		if (i % 3 == 0) cout << '\n';
 		cout << +img.data_pointer[i] << "\t";
 	}
 
+		// apply filters
 	img.grey_scale("NTSC");
 	img.convolution_filter("omni");
 
-	for (int i = 0; i < 99; i++)
-	{
-		if (i % 3 == 0) cout << '\n';
-		cout << +img.data_pointer[i] << "\t";
-	}
+		// print first 33 pixles
+	//for (int i = 0; i < 99; i++)
+	//{
+	//	if (i % 3 == 0) cout << '\n';
+	//	cout << +img.data_pointer[i] << "\t";
+	//}
 
-	img.save("test_conv.bmp");
-
+		// save & pause
+	img.save_bmp("test_new_class.bmp");
 	system("pause");
+}
+
+
+
+	// test bmp load and filter
+void test_bmp()
+{
+		// take user input to load a file
+	string filename;
+	cout << "gimme a .bmp file name bruh: ";
+	cin >> filename;
+
+		// create the bmp image
+	BMP_img img(filename);
+
+		// apply the filters
+	img.grey_scale("NTSC");
+	img.convolution_filter("omni");
+
+		// save the file
+	cout << "gimme a target file name bruh: ";
+	cin >> filename;
+	img.save_bmp(filename);
+}
+
+
+	// test loading a DICOM and saving a BMP
+void test_dicom()
+{
+		// take user input to load a file
+	string filename;
+	cout << "gimme a .dmc file name bruh: ";
+	cin >> filename;
+
+		// load dmc image
+	DICOM_img dmc(filename);
+
+		// take user input to load a file
+	cout << "gimme a target bruh: ";
+	cin >> filename;
+
+		// save as bmp
+	dmc.save_bmp(filename);
 }

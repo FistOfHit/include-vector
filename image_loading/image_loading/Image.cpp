@@ -193,13 +193,12 @@ void BMP_img::dicom_to_bmp(string dicom_filename, string target_filename) {
 	// Non-variable components of command
 	string converter_path = "C:/ProgramData/chocolatey/lib/dcmtk/tools/dcmtk-3.6.4-win64-dynamic/bin/dcmj2pnm.exe "; // if installed correctly via setup.bat...
 	string write_tag = "--write-bmp ";
-	string space = " "; // cba to figure out how to add a space otherwise
 
 	// Constructing command
 	string convert_command = converter_path +
 							 write_tag      +
 							 dicom_filename +
-							 space          +
+							 ' '            +
 							 target_filename;
 
 	// Using system (no pipes needed)

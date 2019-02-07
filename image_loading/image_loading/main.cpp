@@ -2,6 +2,29 @@
 #include "image.h"
 
 
+	// Basic input validation
+template <class T>
+void validate_input(T &input)
+{
+	while (true)
+	{
+		cin >> input;
+
+		if (!cin)
+		{
+			cout << "\nUn-recognised input, try again: ";
+			continue;
+		}
+		for (char &c : input)
+			if (c == ' ')
+			{
+				cout << "\ninput must not have spaces, try again: ";
+				continue;
+			}
+		return;
+	}
+}
+
 
 	// test dicom convert
 int main()
@@ -9,23 +32,24 @@ int main()
 		// take user input to load a file
 	string filename;
 	cout << "gimme a .dmc file name bruh: ";
-	cin >> filename;
+	validate_input(filename);
 
 		// load dmc image
 	DICOM_img dmc(filename);
 		// convert to bmp
-	BMP_img img = *(dmc.convert_bmp());
+	BMP_img * img = nullptr;
+	dmc.convert_bmp(img);
 
 		// print first 33 pixles
-	for (int i = 0; i < 99; i++)
+	for (int i = 0; i < 12; i++)
 	{
 		if (i % 3 == 0) cout << '\n';
-		cout << +img.data_pointer[i] << "\t";
+		cout << +(*img).data_pointer[i] << "\t";
 	}
 
 		// apply filters
-	img.grey_scale("NTSC");
-	img.convolution_filter("omni");
+	(*img).grey_scale("NTSC");
+	//(*img).convolution_filter("omni");
 
 		// print first 33 pixles
 	//for (int i = 0; i < 99; i++)
@@ -35,7 +59,7 @@ int main()
 	//}
 
 		// save & pause
-	img.save_bmp("test_new_class.bmp");
+	(*img).save_bmp("test_new_class.bmp");
 	system("pause");
 }
 

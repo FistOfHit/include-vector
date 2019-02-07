@@ -16,11 +16,22 @@ public:
 		// save and load funciton
 	virtual void save_bmp(string path) = 0;
 
+	Image()
+	{
+			// display information
+		cerr << "\nImage instance at " << this << " constructed\n";
+	}
+
 	~Image()
 	{
+			// display information
+		cerr << "\nImage instance at " << this << " deconstructed";
 			// if data has been loaded delete it
-		if (data_pointer != nullptr)
-			delete[] data_pointer;
+		if (this->data_pointer != nullptr)
+		{
+			cerr << "(data at " << this->data_pointer << " deleted)\n";
+			delete[] this->data_pointer;
+		}
 	}
 };
 
@@ -55,5 +66,5 @@ public:
 	void save_bmp(string name);
 
 		// create BMP_img object
-	BMP_img * convert_bmp();
+	void convert_bmp(BMP_img *&pointer);
 };

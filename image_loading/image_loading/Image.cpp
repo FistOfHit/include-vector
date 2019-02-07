@@ -229,19 +229,23 @@ void DICOM_img::save_bmp(string name)
 }
 
 	// create a BMP_img object (by saving then deleting a file)
-BMP_img * DICOM_img::convert_bmp()
+void DICOM_img::convert_bmp(BMP_img *&pointer)
 {
 		// create bmp file
 	const string name = "tmp.bmp";
 	this->save_bmp(name);
 		
 		// load as object
-	BMP_img obj(name);
+	pointer = new BMP_img(name);
 
 		// delete file and reset name
-	obj.filename = "";
+	(*pointer).filename = "";
 	remove(name.c_str());
 
-	return &obj;
+	for (int i = 0; i < 12; i++)
+	{
+		if (i % 3 == 0) cout << '\n';
+		cout << +(*pointer).data_pointer[i] << "\t";
+	}
+	cout << "daata pointer " << (*pointer).data_pointer << "\n";
 }
-

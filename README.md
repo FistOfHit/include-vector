@@ -1,6 +1,6 @@
-<a href="https://imgur.com/SADgi5k"><img src="https://i.imgur.com/SADgi5k.jpg" title="source: imgur.com" width="200" /></a>
-<a href="https://imgur.com/YwXwEwg"><img src="https://i.imgur.com/YwXwEwg.jpg" title="source: imgur.com" width="200" /></a>
-<a href="https://imgur.com/q2WSgfi"><img src="https://i.imgur.com/q2WSgfi.jpg" title="source: imgur.com" width="200" /></a>
+<a href="https://imgur.com/SADgi5k"><img src="https://i.imgur.com/SADgi5k.jpg" title="source: imgur.com" width="300" /></a>
+<a href="https://imgur.com/YwXwEwg"><img src="https://i.imgur.com/YwXwEwg.jpg" title="source: imgur.com" width="300" /></a>
+<a href="https://imgur.com/q2WSgfi"><img src="https://i.imgur.com/q2WSgfi.jpg" title="source: imgur.com" width="300" /></a>
 
 
 # Edge enhancement for medical image interpretation #
@@ -26,8 +26,8 @@ The most important thing is to be sure that you've run setup.bat before attempti
 
 In fact, if you tweak the main file, you can quite easily load and apply the filter to BMP images independently, without any conversion to/from DICOM. Here's what you can create:
 
-<a href="https://imgur.com/TUrFtyz"><img src="https://i.imgur.com/TUrFtyz.png" title="source: imgur.com" width="400" /></a>
-<a href="https://imgur.com/6SoOfR1"><img src="https://i.imgur.com/6SoOfR1.png" title="source: imgur.com" width="400"/></a>
+<a href="https://imgur.com/TUrFtyz"><img src="https://i.imgur.com/TUrFtyz.png" title="source: imgur.com" width="500" /></a>
+<a href="https://imgur.com/6SoOfR1"><img src="https://i.imgur.com/6SoOfR1.png" title="source: imgur.com" width="500"/></a>
 
 
 ## License ##

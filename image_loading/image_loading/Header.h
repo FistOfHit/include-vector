@@ -7,5 +7,6 @@
 #include <assert.h>
 #include <cstdio>  // for remove function
 #include <algorithm>
+#include <map>
 
 using namespace std;

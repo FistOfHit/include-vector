@@ -2,37 +2,14 @@
 #include "image.h"
 
 
-	// Basic input validation
-template <class T>
-void validate_input(T &input)
-{
-	while (true)
-	{
-		cin >> input;
-
-		if (!cin)
-		{
-			cout << "\nUn-recognised input, try again: ";
-			continue;
-		}
-		for (char &c : input)
-			if (c == ' ')
-			{
-				cout << "\ninput must not have spaces, try again: ";
-				continue;
-			}
-		return;
-	}
-}
-
-
 	// test dicom convert
-int main()
+//int main()
+void test_convert()
 {
 		// take user input to load a file
 	string filename;
 	cout << "gimme a .dmc file name bruh: ";
-	validate_input(filename);
+	cin >> filename;
 
 		// load dmc image
 	DICOM_img dmc(filename);
@@ -48,7 +25,7 @@ int main()
 	}
 
 		// apply filters
-	(*img).grey_scale("NTSC");
+	(*img).grey_scale("SA");
 	//(*img).convolution_filter("omni");
 
 		// print first 33 pixles
@@ -60,6 +37,8 @@ int main()
 
 		// save & pause
 	(*img).save_bmp("test_new_class.bmp");
+
+	delete img;
 	system("pause");
 }
 

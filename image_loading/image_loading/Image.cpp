@@ -236,6 +236,7 @@ void DICOM_img::convert_bmp(BMP_img *&pointer)
 	this->save_bmp(name);
 		
 		// load as object
+		// note this has to be deleted later EXTERNALLY!
 	pointer = new BMP_img(name);
 
 		// delete file and reset name

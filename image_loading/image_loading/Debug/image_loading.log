@@ -1,8 +1,2 @@
-<<<<<<< HEAD
-﻿  main.cpp
-=======
-﻿  Image.cpp
-  main.cpp
-  Generating Code...
->>>>>>> 3e0f672456e73d45c41ea82f0025e2884aa16fe3
+﻿  Menu.cpp
   image_loading.vcxproj -> C:\Users\Richard\OneDrive - Imperial College London\_ACSE-5\project_2\image_loading\Debug\image_loading.exe

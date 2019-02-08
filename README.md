@@ -22,7 +22,7 @@ To setup, simply clone this repository and run the setup file, "setup.bat". That
 
 ## Usage ##
 
-The most important thing is to be sure that you've run setup.bat before attempting to run the code itself. After that you are free to compile the code and run as you like. Once running, you are prompted to feed in a file name (absolute path needed, make sure to provide the full path starting with "C:/..." etc.) for the DICOM iamge that you want to detect edges in. Everything else is decided before compile time, and so to edit it (you shouldn't need to), you'll have to edit the code itself.
+The most important thing is to be sure that you've run setup.bat before attempting to run the code itself. After that you are free to compile the code and run as you like. Once running, you are prompted to feed in a file name (absolute path needed, make sure to provide the full path starting with "C:/..." etc.) for the DICOM image that you want to detect edges in. Everything else is decided before compile time, and so to edit it (you shouldn't need to), you'll have to edit the code itself.
 
 In fact, if you tweak the main file, you can quite easily load and apply the filter to BMP images independently, without any conversion to/from DICOM. Here's what you can create:
 

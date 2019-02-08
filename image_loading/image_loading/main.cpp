@@ -31,24 +31,18 @@ int main()
 {
 		// take user input to load a file
 	string filename;
-	cout << "gimme a .dmc file name bruh: ";
+	cout << "Please provide the absolute path to a .dcm file ";
 	validate_input(filename);
 
 		// load dmc image
 	DICOM_img dmc(filename);
+
 		// convert to bmp
 	BMP_img * img = nullptr;
 	dmc.convert_bmp(img);
 
-		// print first 33 pixles
-	for (int i = 0; i < 12; i++)
-	{
-		if (i % 3 == 0) cout << '\n';
-		cout << +(*img).data_pointer[i] << "\t";
-	}
-
 		// apply filters
-	(*img).grey_scale("NTSC");
+	//(*img).grey_scale("NTSC");
 	//(*img).convolution_filter("omni");
 
 		// print first 33 pixles
@@ -60,6 +54,7 @@ int main()
 
 		// save & pause
 	(*img).save_bmp("test_new_class.bmp");
+	//(*img).save_dcm("test_back_conv.dcm");
 	system("pause");
 }
 

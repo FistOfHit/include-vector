@@ -1,0 +1,1 @@
+cd > current_path.txt

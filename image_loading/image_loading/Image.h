@@ -28,10 +28,7 @@ public:
 		cerr << "\nImage instance at " << this << " deconstructed";
 			// if data has been loaded delete it
 		if (this->data_pointer != nullptr)
-		{
-			cerr << "(data at " << this->data_pointer << " deleted)\n";
 			delete[] this->data_pointer;
-		}
 	}
 };
 

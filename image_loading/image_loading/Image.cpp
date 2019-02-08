@@ -40,6 +40,8 @@ void BMP_img::load(string path)
 	fread_s(raw_data, char_size * this->size, char_size, this->size, *pp);
 	this->data_pointer = raw_data;
 
+		// close the file
+	fclose(p_file);
 }
 
 
@@ -53,6 +55,9 @@ void BMP_img::save_bmp(string name)
 
 		// write the data
 	save_file.write((char *)this->data_pointer, this->size);
+
+		// close the stream
+	save_file.close();
 
 		// update the filename property
 	this->filename = name;

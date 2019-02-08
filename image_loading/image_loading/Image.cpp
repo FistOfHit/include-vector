@@ -97,8 +97,9 @@ void BMP_img::grey_scale(string method)
 		gc = 0.3333;
 	}
 	else
-	{
-		_RAISE("Greyscaling method Unknown");
+	{	
+		cerr << "Greyscaling method Unknown";
+		_RAISE();
 	}
 
 		// set the new color value
@@ -106,10 +107,10 @@ void BMP_img::grey_scale(string method)
 		for (int j = 0; j < this->dim_x; j++) // col j
 		{
 				// find the new value
-			const int index = (i * dim_x + j) * 3;
+			int index  = this->i(i, j, 0);
 			const int grey_val = (uint8_t)ceil(rc * data_pointer[index] + // red
-											   gc * data_pointer[index + 1] + // green
-											   bc * data_pointer[index + 2]); // blue
+												gc * data_pointer[index + 1] + // green
+												bc * data_pointer[index + 2]); // blue
 				// set it for all colors
 			this->data_pointer[index] = grey_val;
 			this->data_pointer[index + 1] = grey_val;
@@ -171,7 +172,8 @@ void BMP_img::convolution_filter(string method)
 
 	} else {
 
-		_RAISE("Filtering method Unknown");
+		cerr << "Filtering method Unknown";
+		_RAISE();
 
 	}
 
@@ -188,6 +190,38 @@ void BMP_img::convolution_filter(string method)
 	delete[] this->data_pointer;
 	this->data_pointer = scaled_filtered;
 	
+}
+
+
+	// create a .dcm file
+void BMP_img::save_dcm(string name)
+{
+
+	// Read single line from file created by setup.bat
+	ifstream path_file("current_path.txt");
+	string current_path;
+	if (path_file.is_open())
+	{
+		getline(path_file, current_path);
+		path_file.close();
+		cout << current_path;
+	}
+	else {
+		cerr << "Please run setup.bat before proceeding.";
+		_RAISE();
+	}
+
+
+	// path to execultable
+	string const converter_path = current_path + "/dcmtk/img2dcm.exe ";
+
+	// Constructing command
+	string convert_command = converter_path + "-i BMP " + this->filename + " " + name;
+
+	// Using system (no pipes needed)
+	system(convert_command.c_str());
+
+	cout << "\nFile" + name + " created\n";
 }
 
 
@@ -216,8 +250,23 @@ DICOM_img::DICOM_img(string path)
 	// create a .bmp file
 void DICOM_img::save_bmp(string name)
 {
-		// if installed correctly via setup.bat...
-	string const converter_path = "C:/ProgramData/chocolatey/lib/dcmtk/tools/dcmtk-3.6.4-win64-dynamic/bin/dcmj2pnm.exe ";
+
+		// Read single line from file created by setup.bat
+	ifstream path_file("current_path.txt");
+	string current_path;
+	if (path_file.is_open()) 
+	{
+		getline(path_file, current_path);
+		path_file.close();
+		cout << current_path;
+	} else { 
+		cerr << "Please run setup.bat before proceeding.";
+		_RAISE();
+	}
+
+
+		// path to execultable
+	string const converter_path = current_path + "/dcmtk/dcmj2pnm.exe ";
 
 		// Constructing command
 	string convert_command = converter_path + "--write-bmp " + this->filename + " " + name;

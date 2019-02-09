@@ -1,8 +1,21 @@
 #include "Header.h"
 #include "image.h"
 
-// Basic input validation
-string validate_name(bool bmp = true, bool dcm = true)
+	// Basic input validation
+string validate_string(string must_have)
+/*
+Makes sure the input filepaths are valid - i.e if the has the correct
+extension and does not contain space (we dont like spaces in windows)
+
+parameters
+----------
+string must_have: the extenstion or expression that must be present
+in the line being inputted
+
+returns
+-------
+none.
+*/
 {
 	string s;
 	while (true)
@@ -20,6 +33,11 @@ string validate_name(bool bmp = true, bool dcm = true)
 
 	// lets the user enter a command to do something
 int menu()
+/*
+The Menu the user sees when running the code, creates a map between
+available inputs and integers, allowing switch-case to take care of 
+the actions carried out.
+*/
 {
 		// setup
 	string input;

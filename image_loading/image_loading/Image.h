@@ -2,6 +2,11 @@
 #include "Header.h"
 
 class Image
+/*
+The main class of any image object here, intialises and contains basic
+information about the image such as size, location in memory,
+absolute path etc.
+*/
 {
 public:
 
@@ -52,6 +57,12 @@ public:
 };
 
 class BMP_img : public Image
+/*
+The child class of an image object, the BMP class separates
+meta-data from pixel arrays on instantiation, and has all the 
+methods to manipulate the image as well as save and load as a 
+BMP image.
+*/
 {
 public:
 		// file meta data
@@ -74,6 +85,11 @@ public:
 };
 
 class DICOM_img : public Image
+/*
+The child class of an image object, the DICOM class simply
+stores the path and has functions to save as a .dcm file or 
+convert to a BMP for manipulation.
+*/
 {
 public:
 		// requiered functions

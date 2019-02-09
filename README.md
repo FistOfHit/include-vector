@@ -1,6 +1,6 @@
-<a href="https://imgur.com/SADgi5k"><img src="https://i.imgur.com/SADgi5k.jpg" title="source: imgur.com" width="250" /></a>
-<a href="https://imgur.com/YwXwEwg"><img src="https://i.imgur.com/YwXwEwg.jpg" title="source: imgur.com" width="250" /></a>
-<a href="https://imgur.com/q2WSgfi"><img src="https://i.imgur.com/q2WSgfi.jpg" title="source: imgur.com" width="250" /></a>
+<a href="https://imgur.com/SADgi5k"><img src="https://i.imgur.com/SADgi5k.jpg" title="source: imgur.com" width="30%" /></a>
+<a href="https://imgur.com/YwXwEwg"><img src="https://i.imgur.com/YwXwEwg.jpg" title="source: imgur.com" width="30%" /></a>
+<a href="https://imgur.com/q2WSgfi"><img src="https://i.imgur.com/q2WSgfi.jpg" title="source: imgur.com" width="30%" /></a>
 
 
 # Edge enhancement for medical image interpretation #
@@ -9,7 +9,7 @@ Capability developed to support the interpretation of medical images by enchanci
 
 ## Summary ##
 - Read DICOM images, convert to BMP and back to DICOM
-- Invert colors, apply greyscaling, and use convolutional filters for edge enchancement
+- Invert colors, apply greyscaling, thresholding, and use convolutional filters for edge enchancement
 - One-click setup, and simple user interface with minimal input required. 
 
 ## Requirements and Installation ##
@@ -22,12 +22,22 @@ To setup, simply clone this repository and run the setup file, "setup.bat". That
 
 ## Usage ##
 
-The most important thing is to be sure that you've run setup.bat before attempting to run the code itself. After that you are free to compile the code and run as you like. Once running, you are prompted to feed in a file name (absolute path needed, make sure to provide the full path starting with "C:/..." etc.) for the DICOM image that you want to detect edges in. Everything else is decided before compile time, and so to edit it (you shouldn't need to), you'll have to edit the code itself.
+Upon running, the user interface should make things quite clear and self explanatory:
 
-In fact, if you tweak the main file, you can quite easily load and apply the filter to BMP images independently, without any conversion to/from DICOM. Here's what you can create:
+<a href="https://imgur.com/OkvS8sK"><img src="https://i.imgur.com/OkvS8sK.jpg" title="source: imgur.com" width="100%"/></a>
 
-<a href="https://imgur.com/TUrFtyz"><img src="https://i.imgur.com/TUrFtyz.png" title="source: imgur.com" width="400" /></a>
-<a href="https://imgur.com/6SoOfR1"><img src="https://i.imgur.com/6SoOfR1.png" title="source: imgur.com" width="400"/></a>
+From here you can load images, apply filters and save them (converting automatically as appropriate). Of course, this requires some background knowledge from the user in that images should be loaded first, and the order in which filters should be applied etc. However anyone who has to examine DICOM files as a profession should be more than capable of understanding this. 
+
+Having all these filters, and being able to use them in various orders does mean that you can apply very complicated operations to the images quite easily. Experiment around if you like, but the reccomended order for colourful images is greyscale -> threshold -> omni/bi directional and for relativley monochromatic images (like X-ray scans), simply avoid the thresholding step.
+
+With the current latest release, the possibility of memory leaks does exist if the user attempts to load/save files in incorrect ordering, so care should be taken with this. 
+
+Of course, you're not restriced at all to using DICOM files. You could very well just load up BMP files independently and play around, getting results like these:
+
+<a href="https://imgur.com/TUrFtyz"><img src="https://i.imgur.com/TUrFtyz.png" title="source: imgur.com" width="40%" /></a>
+<a href="https://imgur.com/6SoOfR1"><img src="https://i.imgur.com/6SoOfR1.png" title="source: imgur.com" width="40%"/></a>
+<a href="https://imgur.com/I1nOufd"><img src="https://i.imgur.com/I1nOufd.png" title="source: imgur.com" width="40%" /></a>
+<a href="https://imgur.com/Tbws3MZ"><img src="https://i.imgur.com/Tbws3MZ.png" title="source: imgur.com" width="40%"/></a>
 
 
 ## License ##

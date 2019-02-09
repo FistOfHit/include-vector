@@ -3,9 +3,17 @@
 
 
 BMP_img::BMP_img(string path)
+/*
+Called on instantiation, simply loads the image and outputs
+the path with dimensions for clarity.
+
+parameters
+----------
+string path: path to the image to be loaded into memory
+*/
 {
 	this->filename = path;
-	
+
 		// open the file
 	FILE *p_file;
 	FILE **pp = &p_file;
@@ -15,34 +23,59 @@ BMP_img::BMP_img(string path)
 	//cout << "file load successful (0 == yes): " << a << '\n';
 	assert(a == 0);
 
-		// read in the header (54 bytes)
+	// read in the header (54 bytes)
 	const int char_size = sizeof(unsigned char);
 	fread_s(this->meta_data, 54 * char_size, char_size, 54, *pp);
 
-		// extract the file dimensions
+	// extract the file dimensions
 	this->dim_x = *(int*)&meta_data[18];
 	this->dim_y = *(int*)&meta_data[22];
 
-		// pad readline to be multiple of 4
+	// pad readline to be multiple of 4
 	if ((this->dim_x % 4) != 0)
 		this->dim_x += 4 - (dim_x % 4);
 
-		// load in the pixel data as charaters
+	// load in the pixel data as charaters
 	this->size = 3 * dim_x * dim_y;
 
-		// u8int method
+	// u8int method
 	uint8_t * raw_data = new uint8_t[this->size];
 	fread_s(raw_data, char_size * this->size, char_size, this->size, *pp);
 	this->data_pointer = raw_data;
 
-		// close the file
+	// close the file
 	fclose(p_file);
+	cout << "Loaded from " << path << " BMP with dimensions "
+		<< dim_x << " " << dim_y << "\n";
 	cout << "Loaded from " << path << " BMP with dimensions "
 		 << dim_x << " " << dim_y << "\n";
 }
 
 
+/*
+Loads BMP files, reading the memory and separating the meta-data
+(54 bytes) and the pixel values, storing the relevant information
+and creating an easy to use array for pixel values.
+
+parameters
+----------
+string path: path to the image to be loaded into memory
+*/
+
+
 void BMP_img::save(string name)
+/*
+Saves a pixel array as a BMP image, appending the correct
+meta-data to the start of the image and writing to a file
+in the correct order. If the extension is .dcm, then
+conversion also takes place.
+
+parameters
+----------
+string name: file name to save the image as (target path)
+
+string ext: file extension to append to image file
+*/
 {
 		// get the file extension
 	string ext = name.substr(name.length() - 4, name.length());
@@ -89,7 +122,23 @@ void BMP_img::save(string name)
 
 
 int BMP_img::i(int row, int col, int rgb)
-	// get pixle 1D value
+/*
+Returns the index in memory of the colour channel of
+the pixel required, keeping in mind how RGB values 
+are conventionally stored in 1-dimension.
+
+parameters
+----------
+int row: row number of the pixel needed
+
+int col: collumn number of the pixel needed
+
+int rgb: which of the 3 channels needed
+
+returns
+-------
+int : index of the pixel colour value required
+*/
 {
 		// check pixle exists
 	assert(3 > rgb && rgb >= 0);
@@ -102,6 +151,16 @@ int BMP_img::i(int row, int col, int rgb)
 
 	// calls the different filter methods
 void BMP_img::filter(string method, uint8_t val)
+/*
+Wrapper function to decide which filter to apply to the image.
+
+parameters
+----------
+string method: which method (filter name) to apply and which 
+	sub method to apply. 
+
+uint8_t val: 8-bit integer parameter passed to some filters
+*/
 {
 	if (method == "inv")
 		this->color_inversion();
@@ -124,6 +183,10 @@ void BMP_img::filter(string method, uint8_t val)
 
 
 void BMP_img::color_inversion()
+/*
+Filter to invert the colour channels of the image. 
+Find the modulo-inverse.
+*/
 {
 	for (int i = 0; i < this->size; i++)
 		this->data_pointer[i] = (uint8_t)255 - this->data_pointer[i];
@@ -131,6 +194,14 @@ void BMP_img::color_inversion()
 
 
 void BMP_img::grey_scale(string method)
+/*
+Finds the weighted average of each colour channel per pixel
+and outputs into one channel, simulating a monochrome image.
+
+parameters
+----------
+string method: which weighting method to use
+*/
 {
 		// set color constants for the method
 	double rc, bc, gc;
@@ -167,6 +238,14 @@ void BMP_img::grey_scale(string method)
 
 
 void BMP_img::threshold(uint8_t limit)
+/*
+Applies a binary threshold to the image, based on the integer
+limit provided. Fills in either 255 or 0 to each pixel.
+
+parameters
+----------
+uint8_t limit: Pixel value to compare other pixels to. The threshold
+*/
 {
 	
 	uint8_t pixel_intensity;
@@ -196,6 +275,16 @@ void BMP_img::threshold(uint8_t limit)
 
 
 void BMP_img::convolution_filter(string method)
+/*
+Applies a 3x3 convolutional filter to the image, using an 
+intermediate array for storing calculated values and then 
+scaling back down to 0-255 range into the final array, 
+reassining the BMP_img class pointer to the new data.
+
+parameters
+----------
+string method: which variant of the laplace filter to apply
+*/
 {
 	float * raw_filtered = new float[this->size];
 	uint8_t * scaled_filtered = new uint8_t[this->size];
@@ -265,6 +354,10 @@ void BMP_img::convolution_filter(string method)
 
 
 DICOM_img::DICOM_img(string path)
+/* 
+Called on instantiation, checks the extension and existence
+of the DICOM file, and stores the filename.
+*/
 {
 		// check the file extension is correct
 		/////////////// make me better :)

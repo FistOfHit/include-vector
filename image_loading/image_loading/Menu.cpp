@@ -35,6 +35,8 @@ int menu()
 	command_map["filter omni"] = 8;
 	command_map["filter di"] = 9;
 	command_map["filter inv"] = 10;
+	command_map["save dmc"] = 11;
+	command_map["filter thresh"] = 12;
 
 
 		// command loop
@@ -59,52 +61,64 @@ int menu()
 				master_pointer = new BMP_img(input);
 				break;
 
-			case 3:
-				cout << " command 3";
+			case 3:  // load dcm
+				cout << "Absolute path to (.dcm) file: ";
+				input = validate_string(".dcm");
+				master_pointer = new DICOM_img(input);
 				break;
 
 			case 4:  // save bmp
 				cout << "Absolute path to save with: ";
 				input = validate_string(".bmp");
-				master_pointer->save_bmp(input);
+				master_pointer->save(input, ".bmp");
 				break;
 
-			case 5:
+			case 5:  // convert to bmp
 				cout << typeid(*master_pointer).name();
-				break;
-
-			case 6:
-				if (typeid(*master_pointer).name() != "class BMP_img")
+				if (typeid(*master_pointer).name() == "class BMP_img")
 				{
-					cout << "Current Image must be a bmp type to apply filters";
-					cout << "try save bmp -> restart -> load bmp or convert";
-					break;
+					cout << "Image is already a bmp file\n";
 				}
 				else
 				{
-					//master_pointer->grey_scale("NTSC");
-					// will create a filter function that has options for all different filter types
-					//(rather than the current outspread)
+					cout << "do something ******************";
 				}
 				break;
 
-			case 7:
-				cout << " command 7";
+			case 6:  // filter 1
+				master_pointer->filter("NTSC");
 				break;
 
-			case 8:
-				cout << " command 8";
+			case 7:  // filter 2
+				master_pointer->filter("SA");
 				break;
 
-			case 9:
-				cout << " command 9";
+			case 8:  // filter 3
+				master_pointer->filter("omni");
 				break;
 
-			case 10:
-				cout << " command 10";
+			case 9:  // filter 4
+				master_pointer->filter("di");
+				break;
+
+			case 10:  // filter 5
+				master_pointer->filter("inv");
+				break;
+
+			case 11:  // save dmc
+				cout << "Absolute path to save with: ";
+				input = validate_string(".dmc");
+				master_pointer->save(input, ".dmc");
+				break;
+
+			case 12:  // filter 6
+				cout << "color threshold: ";
+				int val;
+				cin >> val;
+				master_pointer->filter("thresh", val);
 				break;
 			}
-		else
+		else  // ignore unknown commands
 			cout << " Command not recognised";
 		cout << '\n';
 	}
@@ -118,10 +132,10 @@ int main()
 	{
 		cout << "Medical Image Filter written by Hitesh Kumar and Richard Boyne\n"
 			<< "for ACSE 5.2 coursework - Imperial College London\n\n";
-		cout << "==========================\n\tMenu\n========================== \n"
+		cout << "===============================\n\t\tMenu\n=============================== \n"
 			<< "Command \t\tDescription \n"
 			<< " load bmp \t\t create a bmp object and load into it an image \n"
-			<< " load dmc \t\t create a dicom object \n"
+			<< " load dcm \t\t create a dicom object \n"
 			<< " save bmp \t\t save the current object as a bmp \n"
 			<< " convert \t\t change the current object to be of bmp type \n"
 			<< " filter NTSC \t\t apply National Television System Committee filter \n"
@@ -129,7 +143,8 @@ int main()
 			<< " filter omni \t\t apply omni-directonal convolution filter (diagonals included) \n"
 			<< " filter di \t\t apply omni-directonal convolution filter (diagonals excluded) \n"
 			<< " filter inv \t\t apply a color inversion \n"
-			<< " quit  \t\t exit the program \n"
+			<< " filter thresh \t\t partition image pixels into black and white\n"
+			<< " quit  \t\t\t exit the program \n"
 			<< " restart \t\t restart the programm \n";
 
 		if (menu() == 0) return 0;

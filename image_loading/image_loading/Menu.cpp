@@ -2,18 +2,19 @@
 #include "image.h"
 
 // Basic input validation
-string validate_string(string must_have)
+string validate_name(bool bmp = true, bool dcm = true)
 {
 	string s;
 	while (true)
 	{
 		getline(cin, s);
 
-			// if string has must have and does not have spaces
-		if ((s.find(must_have) != string::npos) && (s.find(" ") == string::npos))
+			// if string has correct extension
+		if ((s.find(".bmp") != string::npos) && bmp ||
+			(s.find(".dcm") != string::npos) && dcm)
 			return s;
 		else
-			cout << "\ninput invalid (check file extesion and ensure no spaces)\n try again: ";
+			cout << "\ninput invalid (check file extesion is correct)\n try again: ";
 	}
 }
 
@@ -28,15 +29,14 @@ int menu()
 	command_map["restart"] = 1;
 	command_map["load bmp"] = 2;
 	command_map["load dcm"] = 3;
-	command_map["save bmp"] = 4;
+	command_map["save"] = 4;
 	command_map["convert"] = 5;
-	command_map["filter NTSC"] = 6;
+	command_map["filter NTSC"] = 6; 
 	command_map["filter SA"] = 7;
 	command_map["filter omni"] = 8;
 	command_map["filter di"] = 9;
 	command_map["filter inv"] = 10;
-	command_map["save dmc"] = 11;
-	command_map["filter thresh"] = 12;
+	command_map["filter thresh"] = 11;
 
 
 		// command loop
@@ -57,20 +57,20 @@ int menu()
 
 			case 2:  // load bmp
 				cout << "Absolute path to (.bmp) file: ";
-				input = validate_string(".bmp");
+				input = validate_name(true, false);
 				master_pointer = new BMP_img(input);
 				break;
 
 			case 3:  // load dcm
 				cout << "Absolute path to (.dcm) file: ";
-				input = validate_string(".dcm");
+				input = validate_name(false, true);
 				master_pointer = new DICOM_img(input);
 				break;
 
 			case 4:  // save bmp
 				cout << "Absolute path to save with: ";
-				input = validate_string(".bmp");
-				master_pointer->save(input, ".bmp");
+				input = validate_name(true, true);
+				master_pointer->save(input);
 				break;
 
 			case 5:  // convert to bmp
@@ -105,13 +105,7 @@ int menu()
 				master_pointer->filter("inv");
 				break;
 
-			case 11:  // save dmc
-				cout << "Absolute path to save with: ";
-				input = validate_string(".dmc");
-				master_pointer->save(input, ".dmc");
-				break;
-
-			case 12:  // filter 6
+			case 11:  // filter 6
 				cout << "color threshold: ";
 				int val;
 				cin >> val;
@@ -136,7 +130,7 @@ int main()
 			<< "Command \t\tDescription \n"
 			<< " load bmp \t\t create a bmp object and load into it an image \n"
 			<< " load dcm \t\t create a dicom object \n"
-			<< " save bmp \t\t save the current object as a bmp \n"
+			<< " save \t\t\t save the current object as a bmp \n"
 			<< " convert \t\t change the current object to be of bmp type \n"
 			<< " filter NTSC \t\t apply National Television System Committee filter \n"
 			<< " filter SA \t\t apply averaging grey filter \n"

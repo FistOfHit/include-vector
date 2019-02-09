@@ -5,18 +5,13 @@
 BMP_img::BMP_img(string path)
 {
 	this->filename = path;
-	load(path);
-	cout << "Loaded from " << path << " BMP with dimensions "
-		 << dim_x << " " << dim_y << "\n";
-}
-
-
-void BMP_img::load(string path)
-{
+	
 		// open the file
 	FILE *p_file;
 	FILE **pp = &p_file;
 	int a = fopen_s(pp, path.c_str(), "rb");
+
+	//////////////////////////////////////////
 	//cout << "file load successful (0 == yes): " << a << '\n';
 	assert(a == 0);
 
@@ -42,11 +37,16 @@ void BMP_img::load(string path)
 
 		// close the file
 	fclose(p_file);
+	cout << "Loaded from " << path << " BMP with dimensions "
+		 << dim_x << " " << dim_y << "\n";
 }
 
 
-void BMP_img::save(string name, string ext)
+void BMP_img::save(string name)
 {
+		// get the file extension
+	string ext = name.substr(name.length() - 4, name.length());
+
 	if (ext == ".bmp")
 	{
 			// create output file
@@ -65,19 +65,25 @@ void BMP_img::save(string name, string ext)
 		this->filename = name;
 	}
 
-	else if (ext == ".dmc")
+	else if (ext == ".dcm")
 	{
 			// path to execultable
-		//string const converter_path = current_path + "/dcmtk/img2dcm.exe ";
-		string const converter_path = "\"C:/Users/Richard/OneDrive - Imperial College London/_ACSE-5/project_2/image_loading/image_loading/dcmtk/img2dcm.exe\"";
+		string const converter_path = "\"" + this->abs_direct + "dcmtk\\img2dcm.exe\"";
+		string const source_path = "\"" + this->filename + "\""; ////////////////// fix me
+		string const target_path = "\"" + name + "\"";
 
 			// Constructing command
-		string convert_command = converter_path + "-i BMP " + this->filename + " " + name;
-		cout << convert_command << '\n';
+		string convert_command = "\"" + converter_path + " -i BMP " + source_path + " " + target_path + "\"";
+
 			// Using system (no pipes needed)
 		system(convert_command.c_str());
 
 		cout << "\nFile" + name + " created\n";
+	}
+	else
+	{
+		cerr << "Extension not recognised";
+		_RAISE();
 	}
 }
 
@@ -258,37 +264,6 @@ void BMP_img::convolution_filter(string method)
 }
 
 
-	// create a .dcm file
-//void BMP_img::save_dcm(string name)
-//{
-//
-//	// Read single line from file created by setup.bat
-//	ifstream path_file("current_path.txt");
-//	string current_path;
-//	if (path_file.is_open())
-//	{
-//		getline(path_file, current_path);
-//		path_file.close();
-//		cout << current_path;
-//	}
-//	else {
-//		cerr << "Please run setup.bat before proceeding.";
-//		_RAISE();
-//	}
-//
-//	// path to execultable
-//	string const converter_path = current_path + "/dcmtk/img2dcm.exe ";
-//
-//	// Constructing command
-//	string convert_command = converter_path + "-i BMP " + this->filename + " " + name;
-//
-//	// Using system (no pipes needed)
-//	system(convert_command.c_str());
-//
-//	cout << "\nFile" + name + " created\n";
-//}
-
-
 DICOM_img::DICOM_img(string path)
 {
 		// check the file extension is correct
@@ -308,47 +283,20 @@ DICOM_img::DICOM_img(string path)
 		_RAISE();
 	}
 
-	// Read single line from file created by setup.bat
-	//////////////////////// check package has been installed
-	/*ifstream path_file("current_path.txt");
-	string current_path;
-	if (path_file.is_open())
-	{
-		getline(path_file, current_path);
-		path_file.close();
-		cout << current_path;
-	}
-	else {
-		cerr << "Please run setup.bat before proceeding.";
-		_RAISE();
-	}*/
-
 		// save the file name for function call
 	this->filename = path;
 }
 
-	 //create a .bmp file
-void DICOM_img::save(string name, string ext)
+
+void DICOM_img::save(string name)
 {
-
-		// Read single line from file created by setup.bat
-	ifstream path_file("current_path.txt");
-	string current_path;
-	if (path_file.is_open()) 
-	{
-		getline(path_file, current_path);
-		path_file.close();
-		cout << current_path;
-	} else { 
-		cerr << "Please run setup.bat before proceeding.";
-		_RAISE();
-	}
-
 		// path to execultable
-	string const converter_path = current_path + "/dcmtk/dcmj2pnm.exe ";
+	string const converter_path = "\"" + this->abs_direct + "dcmtk\\dcmj2pnm.exe\"";
+	string const source_path = "\"" + this->filename + "\""; ////////////////// fix me
+	string const target_path = "\"" + name + "\"";
 
 		// Constructing command
-	string convert_command = converter_path + "--write-bmp " + this->filename + " " + name;
+	string convert_command = "\"" + converter_path + " --write-bmp " + source_path + " " + target_path + "\"";
 
 		// Using system (no pipes needed)
 	system(convert_command.c_str());

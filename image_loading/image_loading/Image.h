@@ -16,8 +16,8 @@ public:
 		// all images must be able to save to bmp
 		// as from bmp the dcmtk package can convert to and
 		// from all other types from there
-	virtual void save(string path, string ext = ".bmp") = 0;
-
+	virtual void save(string path) = 0;
+		// calls the different filter methods
 	virtual void filter(string method, uint8_t val = 0)
 	{
 		cout << "Image must be of type bmp to apply filters\n";
@@ -27,7 +27,7 @@ public:
 	Image()
 	{
 		// display information
-		cerr << "\nImage instance at " << this << " constructed\n";
+		cerr << "Image instance at " << this << " constructed\n";
 
 			// find the path to this program
 		char path[MAX_PATH];
@@ -35,10 +35,10 @@ public:
 			// truncate to current working directory
 		int last_slash = 0;
 		for (int i = 0; i < MAX_PATH; i++)
-			if (path[i] == '/')
-				last_slash = i;
+			if (path[i] == '\\')
+				last_slash = i + 1;  // +1 to include the final slash
 		this->abs_direct = string(&path[0], &path[0] + last_slash);
-		cout << this->abs_direct;
+
 	}
 
 	~Image()
@@ -59,9 +59,8 @@ public:
 
 		// requiered functions
 	BMP_img(string path);
-	void load(string path);
-	void save(string name, string ext = ".bmp");
-
+	void save(string name);
+		
 		// index a pixle
 	int i(int row, int col, int rgb);
 
@@ -72,8 +71,6 @@ public:
 	void convolution_filter(string method);
 	void threshold(uint8_t limit);
 
-	//void save_dcm(string name);
-
 };
 
 class DICOM_img : public Image
@@ -81,7 +78,7 @@ class DICOM_img : public Image
 public:
 		// requiered functions
 	DICOM_img(string path);
-	void save(string name, string ext = ".bmp");
+	void save(string name);
 
 		// create BMP_img object (save bmp -> load bmp -> delete file)
 	void convert_bmp(BMP_img *&pointer);

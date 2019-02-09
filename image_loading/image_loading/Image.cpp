@@ -45,22 +45,40 @@ void BMP_img::load(string path)
 }
 
 
-void BMP_img::save_bmp(string name)
+void BMP_img::save(string name, string ext)
 {
-		// create output file
-	ofstream save_file(name, ios::binary);
+	if (ext == ".bmp")
+	{
+			// create output file
+		ofstream save_file(name, ios::binary);
 
-		// write the header
-	save_file.write((char *)this->meta_data, 54);
+			// write the header
+		save_file.write((char *)this->meta_data, 54);
 
-		// write the data
-	save_file.write((char *)this->data_pointer, this->size);
+			// write the data
+		save_file.write((char *)this->data_pointer, this->size);
 
-		// close the stream
-	save_file.close();
+			// close the stream
+		save_file.close();
 
-		// update the filename property
-	this->filename = name;
+			// update the filename property
+		this->filename = name;
+	}
+
+	else if (ext == ".dmc")
+	{
+			// path to execultable
+		//string const converter_path = current_path + "/dcmtk/img2dcm.exe ";
+		string const converter_path = "\"C:/Users/Richard/OneDrive - Imperial College London/_ACSE-5/project_2/image_loading/image_loading/dcmtk/img2dcm.exe\"";
+
+			// Constructing command
+		string convert_command = converter_path + "-i BMP " + this->filename + " " + name;
+		cout << convert_command << '\n';
+			// Using system (no pipes needed)
+		system(convert_command.c_str());
+
+		cout << "\nFile" + name + " created\n";
+	}
 }
 
 
@@ -73,6 +91,27 @@ int BMP_img::i(int row, int col, int rgb)
 	assert(this->dim_x > col && col >= 0);
 
 	return (int)(((row * this->dim_x + col) * 3) + rgb);
+}
+
+
+	// calls the different filter methods
+void BMP_img::filter(string method)
+{
+	if (method == "inv")
+		this->color_inversion();
+	else if (method == "NTSC")
+		this->grey_scale("NTSC");
+	else if (method == "SA")
+		this->grey_scale("SA");
+	else if (method == "omni")
+		this->convolution_filter("omni");
+	else if (method == "di")
+		this->convolution_filter("di");
+	else
+	{
+		cerr << "Method Unknown";
+		_RAISE();
+	}
 }
 
 
@@ -100,11 +139,6 @@ void BMP_img::grey_scale(string method)
 		rc = 0.3333;
 		bc = 0.3333;
 		gc = 0.3333;
-	}
-	else
-	{	
-		cerr << "Greyscaling method Unknown";
-		_RAISE();
 	}
 
 		// set the new color value
@@ -175,11 +209,6 @@ void BMP_img::convolution_filter(string method)
 
 				}
 
-	} else {
-
-		cerr << "Filtering method Unknown";
-		_RAISE();
-
 	}
 
 	// Scaling intensities onto an 8-bit unsigned data-type 
@@ -199,40 +228,40 @@ void BMP_img::convolution_filter(string method)
 
 
 	// create a .dcm file
-void BMP_img::save_dcm(string name)
-{
-
-	// Read single line from file created by setup.bat
-	ifstream path_file("current_path.txt");
-	string current_path;
-	if (path_file.is_open())
-	{
-		getline(path_file, current_path);
-		path_file.close();
-		cout << current_path;
-	}
-	else {
-		cerr << "Please run setup.bat before proceeding.";
-		_RAISE();
-	}
-
-
-	// path to execultable
-	string const converter_path = current_path + "/dcmtk/img2dcm.exe ";
-
-	// Constructing command
-	string convert_command = converter_path + "-i BMP " + this->filename + " " + name;
-
-	// Using system (no pipes needed)
-	system(convert_command.c_str());
-
-	cout << "\nFile" + name + " created\n";
-}
+//void BMP_img::save_dcm(string name)
+//{
+//
+//	// Read single line from file created by setup.bat
+//	ifstream path_file("current_path.txt");
+//	string current_path;
+//	if (path_file.is_open())
+//	{
+//		getline(path_file, current_path);
+//		path_file.close();
+//		cout << current_path;
+//	}
+//	else {
+//		cerr << "Please run setup.bat before proceeding.";
+//		_RAISE();
+//	}
+//
+//	// path to execultable
+//	string const converter_path = current_path + "/dcmtk/img2dcm.exe ";
+//
+//	// Constructing command
+//	string convert_command = converter_path + "-i BMP " + this->filename + " " + name;
+//
+//	// Using system (no pipes needed)
+//	system(convert_command.c_str());
+//
+//	cout << "\nFile" + name + " created\n";
+//}
 
 
 DICOM_img::DICOM_img(string path)
 {
 		// check the file extension is correct
+		/////////////// make me better :)
 	char * ptr = &path.back();
 	if (*(ptr - 2) != 'd' || *(ptr - 1) != 'c' || *(ptr) != 'm')
 	{
@@ -248,12 +277,27 @@ DICOM_img::DICOM_img(string path)
 		_RAISE();
 	}
 
+	// Read single line from file created by setup.bat
+	//////////////////////// check package has been installed
+	/*ifstream path_file("current_path.txt");
+	string current_path;
+	if (path_file.is_open())
+	{
+		getline(path_file, current_path);
+		path_file.close();
+		cout << current_path;
+	}
+	else {
+		cerr << "Please run setup.bat before proceeding.";
+		_RAISE();
+	}*/
+
 		// save the file name for function call
 	this->filename = path;
 }
 
-	// create a .bmp file
-void DICOM_img::save_bmp(string name)
+	 //create a .bmp file
+void DICOM_img::save(string name, string ext)
 {
 
 		// Read single line from file created by setup.bat
@@ -269,7 +313,6 @@ void DICOM_img::save_bmp(string name)
 		_RAISE();
 	}
 
-
 		// path to execultable
 	string const converter_path = current_path + "/dcmtk/dcmj2pnm.exe ";
 
@@ -279,28 +322,28 @@ void DICOM_img::save_bmp(string name)
 		// Using system (no pipes needed)
 	system(convert_command.c_str());
 
-	cout << "\nFile" + name + " created\n";
+	cout << "\nFile " + name + " created\n";
 }
 
 	// create a BMP_img object (by saving then deleting a file)
 void DICOM_img::convert_bmp(BMP_img *&pointer)
 {
 		// create bmp file
-	const string name = "tmp.bmp";
-	this->save_bmp(name);
-		
-		// load as object
-		// note this has to be deleted later EXTERNALLY!
-	pointer = new BMP_img(name);
+	//const string name = "tmp.bmp";
+	//this->save_bmp(name);
+	//	
+	//	// load as object
+	//	// note this has to be deleted later EXTERNALLY!
+	//pointer = new BMP_img(name);
 
-		// delete file and reset name
-	(*pointer).filename = "";
-	remove(name.c_str());
+	//	// delete file and reset name
+	//(*pointer).filename = "";
+	//remove(name.c_str());
 
-	for (int i = 0; i < 12; i++)
-	{
-		if (i % 3 == 0) cout << '\n';
-		cout << +(*pointer).data_pointer[i] << "\t";
-	}
-	cout << "daata pointer " << (*pointer).data_pointer << "\n";
+	//for (int i = 0; i < 12; i++)
+	//{
+	//	if (i % 3 == 0) cout << '\n';
+	//	cout << +(*pointer).data_pointer[i] << "\t";
+	//}
+	//cout << "daata pointer " << (*pointer).data_pointer << "\n";
 }

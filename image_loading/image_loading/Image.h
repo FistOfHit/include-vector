@@ -18,7 +18,7 @@ public:
 		// from all other types from there
 	virtual void save(string path, string ext = ".bmp") = 0;
 
-	virtual void filter(string method)
+	virtual void filter(string method, uint8_t val = 0)
 	{
 		cout << "Image must be of type bmp to apply filters\n";
 		cout << "try convert or save bmp -> restart -> load bmp\n";
@@ -66,10 +66,13 @@ public:
 	int i(int row, int col, int rgb);
 
 		// apply different filters
-	void filter(string method);
+	void filter(string method, uint8_t val = 0);
 	void color_inversion();
 	void grey_scale(string method);
 	void convolution_filter(string method);
+	void threshold(uint8_t limit);
+
+	//void save_dcm(string name);
 
 };
 

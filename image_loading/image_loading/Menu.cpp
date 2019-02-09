@@ -36,6 +36,7 @@ int menu()
 	command_map["filter di"] = 9;
 	command_map["filter inv"] = 10;
 	command_map["save dmc"] = 11;
+	command_map["filter thresh"] = 12;
 
 
 		// command loop
@@ -109,6 +110,13 @@ int menu()
 				input = validate_string(".dmc");
 				master_pointer->save(input, ".dmc");
 				break;
+
+			case 12:  // filter 6
+				cout << "color threshold: ";
+				int val;
+				cin >> val;
+				master_pointer->filter("thresh", val);
+				break;
 			}
 		else  // ignore unknown commands
 			cout << " Command not recognised";
@@ -135,7 +143,8 @@ int main()
 			<< " filter omni \t\t apply omni-directonal convolution filter (diagonals included) \n"
 			<< " filter di \t\t apply omni-directonal convolution filter (diagonals excluded) \n"
 			<< " filter inv \t\t apply a color inversion \n"
-			<< " quit  \t\t exit the program \n"
+			<< " filter thresh \t\t partition image pixels into black and white\n"
+			<< " quit  \t\t\t exit the program \n"
 			<< " restart \t\t restart the programm \n";
 
 		if (menu() == 0) return 0;

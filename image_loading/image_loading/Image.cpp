@@ -95,7 +95,7 @@ int BMP_img::i(int row, int col, int rgb)
 
 
 	// calls the different filter methods
-void BMP_img::filter(string method)
+void BMP_img::filter(string method, uint8_t val)
 {
 	if (method == "inv")
 		this->color_inversion();
@@ -107,6 +107,8 @@ void BMP_img::filter(string method)
 		this->convolution_filter("omni");
 	else if (method == "di")
 		this->convolution_filter("di");
+	else if (method == "thresh")
+		this->threshold(val);
 	else
 	{
 		cerr << "Method Unknown";
@@ -155,6 +157,35 @@ void BMP_img::grey_scale(string method)
 			this->data_pointer[index + 1] = grey_val;
 			this->data_pointer[index + 2] = grey_val;
 		}
+}
+
+
+void BMP_img::threshold(uint8_t limit)
+{
+	
+	uint8_t pixel_intensity;
+	
+	for (int i = 0; i < this->dim_y; i++) // row i
+		for (int j = 0; j < this->dim_x; j++) //row j
+		{
+
+				int index = this->i(i, j, 0);
+				pixel_intensity = this->data_pointer[index];
+
+				if (pixel_intensity > limit)
+				{
+					this->data_pointer[index] = 255;
+					this->data_pointer[index + 1] = 255;
+					this->data_pointer[index + 2] = 255;
+				}
+				else {
+					this->data_pointer[index] = 0;
+					this->data_pointer[index + 1] = 0;
+					this->data_pointer[index + 2] = 0;
+				}
+
+		}
+
 }
 
 

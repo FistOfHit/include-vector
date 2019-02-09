@@ -24,9 +24,11 @@ To setup, simply clone this repository and run the setup file, "setup.bat". That
 
 Upon running, the user interface should make things quite clear and self explanatory:
 
-<a href="https://imgur.com/OkvS8sK"><img src="https://i.imgur.com/OkvS8sK.jpg" title="source: imgur.com" width="50%"/></a>
+<a href="https://imgur.com/OkvS8sK"><img src="https://i.imgur.com/OkvS8sK.jpg" title="source: imgur.com" width="100%"/></a>
 
 From here you can load images, apply filters and save them (converting automatically as appropriate). Of course, this requires some background knowledge from the user in that images should be loaded first, and the order in which filters should be applied etc. However anyone who has to examine DICOM files as a profession should be more than capable of understanding this. 
+
+Having all these filters, and being able to use them in various orders does mean that you can apply very complicated operations to the images quite easily. Experiment around if you like, but the reccomended order for colourful images is greyscale -> threshold -> omni/bi directional and for relativley monochromatic images (like X-ray scans), simply avoid the thresholding step.
 
 With the current latest release, the possibility of memory leaks does exist if the user attempts to load/save files in incorrect ordering, so care should be taken with this. 
 

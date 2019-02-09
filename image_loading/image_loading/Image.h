@@ -50,6 +50,8 @@ public:
 
 	void convolution_filter(string method);
 
+	/////////////////////////////////void threshold(uint8_t limit);
+
 		// save as other file formats
 	//void dicom_to_bmp(string dicom_filename, string target_filename);
 

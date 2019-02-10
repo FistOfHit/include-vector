@@ -16,9 +16,9 @@ Capability developed to support the interpretation of medical images by enchanci
 
 - MS Visual studio IDE
 - C++ SDK (part of MSVS)
-- DMCTK [1] binaries and DLL's (included, and automatically setup)
+- DMCTK [1] binaries and DLL's (included, and automatically setup. Must be in a dmctk directory in the working directory)
 
-To setup, simply clone this repository and run the setup file, "setup.bat". That is all. Then you can open the project in MSVS and build as normal. (NOTE: as of 07/02/19, compiler warnings may be raised regarding the inputs to ``_RAISE``. You can safely ignore these for now. 
+To setup, simply clone this repository. The file setup.bat will install the DMCTK package if needed however these files are already in the repository so you can open the project in MSVS and build as normal. (NOTE: as of 07/02/19, compiler warnings may be raised regarding the inputs to ``_RAISE``. You can safely ignore these for now. 
 
 ## Usage ##
 

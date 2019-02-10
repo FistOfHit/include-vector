@@ -96,13 +96,17 @@ string ext: file extension to append to image file
 
 			// update the filename property
 		this->filename = name;
+		cout << "\nFile" + name + " created\n";
 	}
 
 	else if (ext == ".dcm")
 	{
+			// temporary bmp save
+		this->save("tmp.bmp");
+
 			// path to execultable
 		string const converter_path = "\"" + this->abs_direct + "dcmtk\\img2dcm.exe\"";
-		string const source_path = "\"" + this->filename + "\""; ////////////////// fix me
+		string const source_path = "\"" + this->filename + "\"";
 		string const target_path = "\"" + name + "\"";
 
 			// Constructing command
@@ -110,7 +114,12 @@ string ext: file extension to append to image file
 
 			// Using system (no pipes needed)
 		system(convert_command.c_str());
-
+			
+			// delete the temporary save
+		remove("tmp.bmp");
+		
+			// update the filename property
+		this->filename = name;
 		cout << "\nFile" + name + " created\n";
 	}
 	else

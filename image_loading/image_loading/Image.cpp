@@ -134,7 +134,9 @@ int BMP_img::i(int row, int col, int rgb)
 /*
 Returns the index in memory of the colour channel of
 the pixel required, keeping in mind how RGB values 
-are conventionally stored in 1-dimension.
+are conventionally stored in 1-dimension. 
+Keeps in mind the alternative indexing when dealing 
+with 8-bit images
 
 parameters
 ----------
@@ -320,6 +322,9 @@ string method: which variant of the laplace filter to apply
 {
 	int * raw_filtered = new int[this->size];
 
+	float min_intensity = 0;
+	float max_intensity = 0;
+
 		// omni-directional method
 	if (method == "omni") {
 		for (int i = 1; i < (this->dim_y - 1); i++) // row i
@@ -336,8 +341,13 @@ string method: which variant of the laplace filter to apply
 													 -1 * this->data_pointer[this->i(i+1, j-1, n)] +
 													 -1 * this->data_pointer[this->i(i+1, j  , n)] +
 													 -1 * this->data_pointer[this->i(i+1, j+1, n)];
+
+					min_intensity = min(raw_filtered[this->i(i, j, n)], min_intensity);
+					max_intensity = max(raw_filtered[this->i(i, j, n)], max_intensity);
+
 				}
 
+		// bi-direectional method
 	} else if (method == "bi") {
 		for (int i = 1; i < (this->dim_y - 1); i++) // row i
 			for (int j = 1; j < (this->dim_x - 1); j++)  // col j
@@ -349,18 +359,25 @@ string method: which variant of the laplace filter to apply
 													  4 * this->data_pointer[this->i(i  , j,   n)] +
 													 -1 * this->data_pointer[this->i(i  , j+1, n)] +
 													 -1 * this->data_pointer[this->i(i+1, j,   n)];
+
+					min_intensity = min(raw_filtered[this->i(i, j, n)], min_intensity);
+					max_intensity = max(raw_filtered[this->i(i, j, n)], max_intensity);
+
 				}
 
 	}
 
+	// Scale all pixels back down to 0-255 range, and cast to uint8_t
 	for (int i = 1; i < (this->dim_y - 1); i++) // row i
 		for (int j = 1; j < (this->dim_x - 1); j++)  // col j
 			for (int n = 0; n < 3; n++)  // color n
 			{
+				raw_filtered[this->i(i, j, n)] = (raw_filtered[this->i(i, j, n)] - min_intensity) /
+												 (max_intensity - min_intensity) * 255.0f;
 				this->data_pointer[this->i(i, j, n)] = (uint8_t)raw_filtered[this->i(i, j, n)];
 			}
 
-	//////////////////////// NOTE i removed scaling cuz it just dosent seem to help us over various experiments. two pixels  with 5 bits of colour difference will always have 5 bits of colour difference regardless of how many times they are wrapped aroung in mod 256 space.
+	delete[] raw_filtered; ///////////////////// Is this enough to delete the allocated array??? or do we have to delete the pointer too
 
 }
 

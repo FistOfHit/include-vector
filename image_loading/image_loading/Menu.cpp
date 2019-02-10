@@ -51,7 +51,7 @@ the actions carried out.
 	command_map["filter NTSC"] = 6; 
 	command_map["filter SA"] = 7;
 	command_map["filter omni"] = 8;
-	command_map["filter di"] = 9;
+	command_map["filter bi"] = 9;
 	command_map["filter inv"] = 10;
 	command_map["filter thresh"] = 11;
 
@@ -126,6 +126,7 @@ the actions carried out.
 				cout << "color threshold: ";
 				int val;
 				cin >> val;
+				cout << '\n';
 				master_pointer->filter("thresh", val);
 				break;
 			}

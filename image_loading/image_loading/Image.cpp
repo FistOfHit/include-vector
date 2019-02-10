@@ -21,7 +21,7 @@ string path: path to the image to be loaded into memory
 	FILE **pp = &p_file;
 	int a = fopen_s(pp, path.c_str(), "rb");
 
-	if (a == 0)
+	if (a != 0)
 	{
 		cerr << "File not found, ensure you use absolute file path";
 		_RAISE();
@@ -91,7 +91,7 @@ string ext: file extension to append to image file
 
 			// update the filename property
 		this->filename = name;
-		cout << "\nFile" + name + " created\n";
+		cout << "\nFile " + name + " created\n";
 	}
 
 	else if (ext == ".dcm")
@@ -115,7 +115,7 @@ string ext: file extension to append to image file
 		
 			// update the filename property
 		this->filename = name;
-		cout << "\nFile" + name + " created\n";
+		cout << "\nFile " + name + " created\n";
 	}
 	else
 	{
@@ -412,7 +412,7 @@ void DICOM_img::save(string name)
 
 		// Constructing command
 	string convert_command = "\"" + converter_path + " --write-bmp " + source_path + " " + target_path + "\"";
-
+	cout << convert_command;
 		// Using system (no pipes needed)
 	system(convert_command.c_str());
 

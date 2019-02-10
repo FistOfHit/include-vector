@@ -30,6 +30,7 @@ string path: path to the image to be loaded into memory
 	// extract the file dimensions
 	this->dim_x = *(int*)&meta_data[18];
 	this->dim_y = *(int*)&meta_data[22];
+	this->bit_depth = *(uint8_t*)&meta_data[28]; // Read bit depth for conditional indexing
 
 	// pad readline to be multiple of 4
 	if ((this->dim_x % 4) != 0)
@@ -47,8 +48,7 @@ string path: path to the image to be loaded into memory
 	fclose(p_file);
 	cout << "Loaded from " << path << " BMP with dimensions "
 		<< dim_x << " " << dim_y << "\n";
-	cout << "Loaded from " << path << " BMP with dimensions "
-		 << dim_x << " " << dim_y << "\n";
+	cout << "Image is " << (int)this->bit_depth << " bit-depth BMP." << "\n";
 }
 
 
@@ -140,12 +140,24 @@ returns
 int : index of the pixel colour value required
 */
 {
-		// check pixle exists
+		// check pixel exists
 	assert(3 > rgb && rgb >= 0);
 	assert(this->dim_y > row && row >= 0);
 	assert(this->dim_x > col && col >= 0);
 
-	return (int)(((row * this->dim_x + col) * 3) + rgb);
+	int index;
+
+	// Indexing appropriately for 8 bit vs 24 bit depth images.
+	if (this->bit_depth == 8) 
+	{
+		index = ((row + 3) * this->dim_x) + col;
+	}
+	else {
+		index = ((row * this->dim_x + col) * 3) + rgb;
+	}
+
+	return index;
+
 }
 
 
@@ -188,8 +200,12 @@ Filter to invert the colour channels of the image.
 Find the modulo-inverse.
 */
 {
-	for (int i = 0; i < this->size; i++)
-		this->data_pointer[i] = (uint8_t)255 - this->data_pointer[i];
+	for (int i = 0; i < this->dim_y; i++)
+		for (int j = 0; j < this->dim_x; j++)
+			for (int n = 0; n < 3; n++)
+			{
+				this->data_pointer[this->i(i, j, n)] = (uint8_t)255 - this->data_pointer[this->i(i, j, n)];
+			}
 }
 
 
@@ -203,37 +219,46 @@ parameters
 string method: which weighting method to use
 */
 {
-		// set color constants for the method
+		// set color weights for the method
+	float weights[3];
+
 	double rc, bc, gc;
 	if (method == "NTSC")
 	{
 			// NTSC_luminence method
-		rc = 0.2989;
-		bc = 0.5870;
-		gc = 0.1140;
+		weights[0] = 0.2989;
+		weights[1] = 0.5870;
+		weights[2] = 0.1140;
 	}
 	else if (method == "SA")
 	{
 			// spectral_average method
-		rc = 0.3333;
-		bc = 0.3333;
-		gc = 0.3333;
+		weights[0] = 0.3333;
+		weights[1] = 0.3333;
+		weights[2] = 0.3333;
 	}
 
+	float grey_val;
+
 		// set the new color value
-	for (int i = 0; i < this->dim_y; i++) // row i
-		for (int j = 0; j < this->dim_x; j++) // col j
-		{
-				// find the new value
-			int index  = this->i(i, j, 0);
-			const int grey_val = (uint8_t)ceil(rc * data_pointer[index] + // red
-												gc * data_pointer[index + 1] + // green
-												bc * data_pointer[index + 2]); // blue
-				// set it for all colors
-			this->data_pointer[index] = grey_val;
-			this->data_pointer[index + 1] = grey_val;
-			this->data_pointer[index + 2] = grey_val;
+	for (int i = 0; i < this->dim_y; i++) { // row i
+		for (int j = 0; j < this->dim_x; j++) {// col j
+			grey_val = 0.0f;
+			// accumulate the sum of weightings
+			for (int n = 0; n < 3; n++)
+			{
+				grey_val = grey_val + (weights[n] * (int)data_pointer[this->i(i, j, n)]);
+			}
+
+			// apply with casting
+			grey_val = ceil(grey_val);
+			for (int n = 0; n < 3; n++)
+			{
+				data_pointer[this->i(i, j, n)] = (uint8_t)grey_val;
+			}
 		}
+	}
+
 }
 
 
@@ -253,22 +278,20 @@ uint8_t limit: Pixel value to compare other pixels to. The threshold
 	for (int i = 0; i < this->dim_y; i++) // row i
 		for (int j = 0; j < this->dim_x; j++) //row j
 		{
-
-				int index = this->i(i, j, 0);
-				pixel_intensity = this->data_pointer[index];
-
+			
+			pixel_intensity = this->data_pointer[this->i(i, j, 0)];
+			
+			// simple binary decision, case by case for pixel
+			for (int n = 0; n < 3; n++)
+			{
 				if (pixel_intensity > limit)
 				{
-					this->data_pointer[index] = 255;
-					this->data_pointer[index + 1] = 255;
-					this->data_pointer[index + 2] = 255;
+					this->data_pointer[this->i(i, j, n)] = 255;
 				}
 				else {
-					this->data_pointer[index] = 0;
-					this->data_pointer[index + 1] = 0;
-					this->data_pointer[index + 2] = 0;
+					this->data_pointer[this->i(i, j, n)] = 0;
 				}
-
+			}
 		}
 
 }
@@ -286,15 +309,10 @@ parameters
 string method: which variant of the laplace filter to apply
 */
 {
-	float * raw_filtered = new float[this->size];
-	uint8_t * scaled_filtered = new uint8_t[this->size];
-
-	float min_intensity = 0;
-	float max_intensity = 0;
+	int * raw_filtered = new int[this->size];
 
 		// omni-directional method
 	if (method == "omni") {
-
 		for (int i = 1; i < (this->dim_y - 1); i++) // row i
 			for (int j = 1; j < (this->dim_x - 1); j++)  // col j
 				for (int n = 0; n < 3; n++)  // color n
@@ -309,15 +327,9 @@ string method: which variant of the laplace filter to apply
 													 -1 * this->data_pointer[this->i(i+1, j-1, n)] +
 													 -1 * this->data_pointer[this->i(i+1, j  , n)] +
 													 -1 * this->data_pointer[this->i(i+1, j+1, n)];
-
-					// find min and max intensities after raw filtered data
-					min_intensity= min(raw_filtered[this->i(i, j, n)], min_intensity);
-					max_intensity = max(raw_filtered[this->i(i, j, n)], max_intensity);
-
 				}
 
 	} else if (method == "bi") {
-
 		for (int i = 1; i < (this->dim_y - 1); i++) // row i
 			for (int j = 1; j < (this->dim_x - 1); j++)  // col j
 				for (int n = 0; n < 3; n++)  // color n
@@ -328,28 +340,19 @@ string method: which variant of the laplace filter to apply
 													  4 * this->data_pointer[this->i(i  , j,   n)] +
 													 -1 * this->data_pointer[this->i(i  , j+1, n)] +
 													 -1 * this->data_pointer[this->i(i+1, j,   n)];
-
-					// find min and max intensities after raw filtered data
-					min_intensity = min(raw_filtered[this->i(i, j, n)], min_intensity);
-					max_intensity = max(raw_filtered[this->i(i, j, n)], max_intensity);
-
 				}
 
 	}
 
-	// Scaling intensities onto an 8-bit unsigned data-type 
 	for (int i = 1; i < (this->dim_y - 1); i++) // row i
 		for (int j = 1; j < (this->dim_x - 1); j++)  // col j
 			for (int n = 0; n < 3; n++)  // color n
 			{
-				raw_filtered[this->i(i, j, n)] = (raw_filtered[this->i(i, j, n)] - min_intensity) *
-					(255.0f / max_intensity);
-				scaled_filtered[this->i(i, j, n)] = (uint8_t)raw_filtered[this->i(i, j, n)];
+				this->data_pointer[this->i(i, j, n)] = (uint8_t)raw_filtered[this->i(i, j, n)];
 			}
 
-	delete[] this->data_pointer;
-	this->data_pointer = scaled_filtered;
-	
+	//////////////////////// NOTE i removed scaling cuz it just dosent seem to help us over various experiments. two pixels  with 5 bits of colour difference will always have 5 bits of colour difference regardless of how many times they are wrapped aroung in mod 256 space.
+
 }
 
 
@@ -384,7 +387,7 @@ of the DICOM file, and stores the filename.
 void DICOM_img::save(string name)
 {
 		// path to execultable
-	string const converter_path = "\"" + this->abs_direct + "dcmtk\\dcmj2pnm.exe\"";
+	string const converter_path = "\"" + this->abs_direct + "dcmtk\\dcm2pnm.exe\"";
 	string const source_path = "\"" + this->filename + "\""; ////////////////// fix me
 	string const target_path = "\"" + name + "\"";
 

@@ -4,7 +4,9 @@
 
 BMP_img::BMP_img(string path)
 /*
-Called on instantiation, simply loads the image and outputs
+Called on instantiation, loads the image reading the memory and
+separates the meta-data (54 bytes) and the pixel values, storing
+the relevant information and creating an easy to use array for pixel values and outputs
 the path with dimensions for clarity.
 
 parameters
@@ -19,48 +21,41 @@ string path: path to the image to be loaded into memory
 	FILE **pp = &p_file;
 	int a = fopen_s(pp, path.c_str(), "rb");
 
-	//////////////////////////////////////////
-	//cout << "file load successful (0 == yes): " << a << '\n';
-	assert(a == 0);
+	if (a == 0)
+	{
+		cerr << "File not found, ensure you use absolute file path";
+		_RAISE();
+	}
 
-	// read in the header (54 bytes)
+		// read in the header (54 bytes)
 	const int char_size = sizeof(unsigned char);
 	fread_s(this->meta_data, 54 * char_size, char_size, 54, *pp);
 
-	// extract the file dimensions
+		// extract the file dimensions
 	this->dim_x = *(int*)&meta_data[18];
 	this->dim_y = *(int*)&meta_data[22];
 	this->bit_depth = *(uint8_t*)&meta_data[28]; // Read bit depth for conditional indexing
 
-	// pad readline to be multiple of 4
+		// pad readline to be multiple of 4
 	if ((this->dim_x % 4) != 0)
 		this->dim_x += 4 - (dim_x % 4);
 
-	// load in the pixel data as charaters
+		// load in the pixel data as charaters
 	this->size = 3 * dim_x * dim_y;
 
-	// u8int method
+		// u8int method
 	uint8_t * raw_data = new uint8_t[this->size];
 	fread_s(raw_data, char_size * this->size, char_size, this->size, *pp);
 	this->data_pointer = raw_data;
 
-	// close the file
+		// close the file
 	fclose(p_file);
+
+		// print the info
 	cout << "Loaded from " << path << " BMP with dimensions "
-		<< dim_x << " " << dim_y << "\n";
-	cout << "Image is " << (int)this->bit_depth << " bit-depth BMP." << "\n";
+		 << dim_x << " " << dim_y << "\n"
+		 << "Image is " << (int)this->bit_depth << " bit-depth BMP." << "\n";
 }
-
-
-/*
-Loads BMP files, reading the memory and separating the meta-data
-(54 bytes) and the pixel values, storing the relevant information
-and creating an easy to use array for pixel values.
-
-parameters
-----------
-string path: path to the image to be loaded into memory
-*/
 
 
 void BMP_img::save(string name)
@@ -377,7 +372,7 @@ string method: which variant of the laplace filter to apply
 				this->data_pointer[this->i(i, j, n)] = (uint8_t)raw_filtered[this->i(i, j, n)];
 			}
 
-	delete[] raw_filtered; ///////////////////// Is this enough to delete the allocated array??? or do we have to delete the pointer too
+	delete[] raw_filtered;
 
 }
 
@@ -389,9 +384,7 @@ of the DICOM file, and stores the filename.
 */
 {
 		// check the file extension is correct
-		/////////////// make me better :)
-	char * ptr = &path.back();
-	if (*(ptr - 2) != 'd' || *(ptr - 1) != 'c' || *(ptr) != 'm')
+	if (path.find(".dcm") == string::npos)
 	{
 		cerr << "file extenion must be '.dcm'";
 		_RAISE();
@@ -414,7 +407,7 @@ void DICOM_img::save(string name)
 {
 		// path to execultable
 	string const converter_path = "\"" + this->abs_direct + "dcmtk\\dcm2pnm.exe\"";
-	string const source_path = "\"" + this->filename + "\""; ////////////////// fix me
+	string const source_path = "\"" + this->filename + "\"";
 	string const target_path = "\"" + name + "\"";
 
 		// Constructing command
@@ -427,8 +420,8 @@ void DICOM_img::save(string name)
 }
 
 	// create a BMP_img object (by saving then deleting a file)
-void DICOM_img::convert_bmp(BMP_img *&pointer)
-{
+//void DICOM_img::convert_bmp(BMP_img *&pointer)
+//{
 		// create bmp file
 	//const string name = "tmp.bmp";
 	//this->save_bmp(name);
@@ -447,4 +440,4 @@ void DICOM_img::convert_bmp(BMP_img *&pointer)
 	//	cout << +(*pointer).data_pointer[i] << "\t";
 	//}
 	//cout << "daata pointer " << (*pointer).data_pointer << "\n";
-}
+//}

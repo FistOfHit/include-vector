@@ -119,9 +119,7 @@
     <ClInclude Include="Image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dcmtk_test.cpp" />
     <ClCompile Include="Image.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

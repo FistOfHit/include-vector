@@ -147,7 +147,7 @@ int main()
 			<< "Command \t\tDescription \n"
 			<< " load bmp \t\t create a bmp object and load into it an image \n"
 			<< " load dcm \t\t create a dicom object \n"
-			<< " save \t\t\t save the current object as a bmp \n"
+			<< " save \t\t\t save the current object as a bmp or dcm (choose by file extension) \n"
 			//<< " convert \t\t change the current object to be of bmp type \n"
 			<< " filter NTSC \t\t apply National Television System Committee filter \n"
 			<< " filter SA \t\t apply averaging grey filter \n"

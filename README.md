@@ -26,7 +26,9 @@ Upon running, the user interface should make things quite clear and self explana
 
 <a href="https://imgur.com/OkvS8sK"><img src="https://i.imgur.com/OkvS8sK.jpg" title="source: imgur.com" width="100%"/></a>
 
-From here you can load images, apply filters and save them (converting automatically as appropriate). Of course, this requires some background knowledge from the user in that images should be loaded first, and the order in which filters should be applied etc. However anyone who has to examine DICOM files as a profession should be more than capable of understanding this. 
+An import note is that filters can only be applied to a file in bmp format. If a file is the dicom format it needs to be saved as a bmp first, then reloaded (A function to this without the need to save and then reload is a future improvement that would be implemeneted time permitting).
+
+From here you can load images, apply filters and save them (converting automatically as appropriate). Of course, this requires some background knowledge from the user in that images should be loaded first, and the order in which filters should be applied etc. However anyone who has to examine DICOM files as a profession should be more than capable of understanding this.
 
 Having all these filters, and being able to use them in various orders does mean that you can apply very complicated operations to the images quite easily. Experiment around if you like, but the reccomended order for colourful images is greyscale -> threshold -> omni/bi directional and for relativley monochromatic images (like X-ray scans), simply avoid the thresholding step.
 

@@ -116,7 +116,7 @@ the actions carried out.
 				break;
 
 			case 9:  // filter 4
-				master_pointer->filter("di");
+				master_pointer->filter("bi");
 				break;
 
 			case 10:  // filter 5
@@ -153,7 +153,7 @@ int main()
 			<< " filter NTSC \t\t apply National Television System Committee filter \n"
 			<< " filter SA \t\t apply averaging grey filter \n"
 			<< " filter omni \t\t apply omni-directonal convolution filter (diagonals included) \n"
-			<< " filter di \t\t apply omni-directonal convolution filter (diagonals excluded) \n"
+			<< " filter bi \t\t apply bi-directonal convolution filter (diagonals excluded) \n"
 			<< " filter inv \t\t apply a color inversion \n"
 			<< " filter thresh \t\t partition image pixels into black and white\n"
 			<< " quit  \t\t\t exit the program \n"

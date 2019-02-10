@@ -47,13 +47,12 @@ the actions carried out.
 	command_map["load bmp"] = 2;
 	command_map["load dcm"] = 3;
 	command_map["save"] = 4;
-	//command_map["convert"] = 5;
-	command_map["filter NTSC"] = 6; 
-	command_map["filter SA"] = 7;
-	command_map["filter omni"] = 8;
-	command_map["filter bi"] = 9;
-	command_map["filter inv"] = 10;
-	command_map["filter thresh"] = 11;
+	command_map["filter NTSC"] = 5; 
+	command_map["filter SA"] = 6;
+	command_map["filter omni"] = 7;
+	command_map["filter bi"] = 8;
+	command_map["filter inv"] = 9;
+	command_map["filter thresh"] = 10;
 
 
 		// command loop
@@ -90,39 +89,27 @@ the actions carried out.
 				master_pointer->save(input);
 				break;
 
-			//case 5:  // convert to bmp
-			//	cout << typeid(*master_pointer).name();
-			//	if (typeid(*master_pointer).name() == "class BMP_img")
-			//	{
-			//		cout << "Image is already a bmp file\n";
-			//	}
-			//	else
-			//	{
-			//		cout << "do something ******************";
-			//	}
-			//	break;
-
-			case 6:  // filter 1
+			case 5:  // filter 1
 				master_pointer->filter("NTSC");
 				break;
 
-			case 7:  // filter 2
+			case 6:  // filter 2
 				master_pointer->filter("SA");
 				break;
 
-			case 8:  // filter 3
+			case 7:  // filter 3
 				master_pointer->filter("omni");
 				break;
 
-			case 9:  // filter 4
+			case 8:  // filter 4
 				master_pointer->filter("bi");
 				break;
 
-			case 10:  // filter 5
+			case 9:  // filter 5
 				master_pointer->filter("inv");
 				break;
 
-			case 11:  // filter 6
+			case 10:  // filter 6
 				cout << "color threshold: ";
 				int val;
 				cin >> val;
@@ -149,7 +136,6 @@ int main()
 			<< " load bmp \t\t create a bmp object and load into it an image \n"
 			<< " load dcm \t\t create a dicom object \n"
 			<< " save \t\t\t save the current object as a bmp or dcm (choose by file extension) \n"
-			//<< " convert \t\t change the current object to be of bmp type \n"
 			<< " filter NTSC \t\t apply National Television System Committee filter \n"
 			<< " filter SA \t\t apply averaging grey filter \n"
 			<< " filter omni \t\t apply omni-directonal convolution filter (diagonals included) \n"

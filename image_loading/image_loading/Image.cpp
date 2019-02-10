@@ -34,7 +34,8 @@ string path: path to the image to be loaded into memory
 		// extract the file dimensions
 	this->dim_x = *(int*)&meta_data[18];
 	this->dim_y = *(int*)&meta_data[22];
-	this->bit_depth = *(uint8_t*)&meta_data[28]; // Read bit depth for conditional indexing
+		// Read bit depth for conditional indexing
+	this->bit_depth = *(uint8_t*)&meta_data[28]; 
 
 		// pad readline to be multiple of 4
 	if ((this->dim_x % 4) != 0)
@@ -418,26 +419,3 @@ void DICOM_img::save(string name)
 
 	cout << "\nFile " + name + " created\n";
 }
-
-	// create a BMP_img object (by saving then deleting a file)
-//void DICOM_img::convert_bmp(BMP_img *&pointer)
-//{
-		// create bmp file
-	//const string name = "tmp.bmp";
-	//this->save_bmp(name);
-	//	
-	//	// load as object
-	//	// note this has to be deleted later EXTERNALLY!
-	//pointer = new BMP_img(name);
-
-	//	// delete file and reset name
-	//(*pointer).filename = "";
-	//remove(name.c_str());
-
-	//for (int i = 0; i < 12; i++)
-	//{
-	//	if (i % 3 == 0) cout << '\n';
-	//	cout << +(*pointer).data_pointer[i] << "\t";
-	//}
-	//cout << "daata pointer " << (*pointer).data_pointer << "\n";
-//}

@@ -16,7 +16,8 @@ public:
 	int dim_x = -1;
 	int dim_y = -1;
 	int size = -1;
-	uint8_t bit_depth = -1; // new class attribute, determines how we index the image
+		// determines how we index the image
+	uint8_t bit_depth = -1;
 	string abs_direct = "";
 
 		// all images must be able to save to bmp
@@ -97,6 +98,4 @@ public:
 	DICOM_img(string path);
 	void save(string name);
 
-		// create BMP_img object (save bmp -> load bmp -> delete file)
-	void convert_bmp(BMP_img *&pointer);
 };

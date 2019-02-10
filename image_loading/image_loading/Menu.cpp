@@ -9,12 +9,11 @@ extension and does not contain space (we dont like spaces in windows)
 
 parameters
 ----------
-string must_have: the extenstion or expression that must be present
-in the line being inputted
+bmp, dcm: boolians for the allowed extensions for the string to be input
 
 returns
 -------
-none.
+sting: valid filepath from the user
 */
 {
 	string s;
@@ -48,11 +47,11 @@ the actions carried out.
 	command_map["load bmp"] = 2;
 	command_map["load dcm"] = 3;
 	command_map["save"] = 4;
-	command_map["convert"] = 5;
+	//command_map["convert"] = 5;
 	command_map["filter NTSC"] = 6; 
 	command_map["filter SA"] = 7;
 	command_map["filter omni"] = 8;
-	command_map["filter di"] = 9;
+	command_map["filter bi"] = 9;
 	command_map["filter inv"] = 10;
 	command_map["filter thresh"] = 11;
 
@@ -91,17 +90,17 @@ the actions carried out.
 				master_pointer->save(input);
 				break;
 
-			case 5:  // convert to bmp
-				cout << typeid(*master_pointer).name();
-				if (typeid(*master_pointer).name() == "class BMP_img")
-				{
-					cout << "Image is already a bmp file\n";
-				}
-				else
-				{
-					cout << "do something ******************";
-				}
-				break;
+			//case 5:  // convert to bmp
+			//	cout << typeid(*master_pointer).name();
+			//	if (typeid(*master_pointer).name() == "class BMP_img")
+			//	{
+			//		cout << "Image is already a bmp file\n";
+			//	}
+			//	else
+			//	{
+			//		cout << "do something ******************";
+			//	}
+			//	break;
 
 			case 6:  // filter 1
 				master_pointer->filter("NTSC");
@@ -127,6 +126,7 @@ the actions carried out.
 				cout << "color threshold: ";
 				int val;
 				cin >> val;
+				cout << '\n';
 				master_pointer->filter("thresh", val);
 				break;
 			}
@@ -148,8 +148,8 @@ int main()
 			<< "Command \t\tDescription \n"
 			<< " load bmp \t\t create a bmp object and load into it an image \n"
 			<< " load dcm \t\t create a dicom object \n"
-			<< " save \t\t\t save the current object as a bmp \n"
-			<< " convert \t\t change the current object to be of bmp type \n"
+			<< " save \t\t\t save the current object as a bmp or dcm (choose by file extension) \n"
+			//<< " convert \t\t change the current object to be of bmp type \n"
 			<< " filter NTSC \t\t apply National Television System Committee filter \n"
 			<< " filter SA \t\t apply averaging grey filter \n"
 			<< " filter omni \t\t apply omni-directonal convolution filter (diagonals included) \n"

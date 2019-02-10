@@ -16,9 +16,9 @@ Capability developed to support the interpretation of medical images by enchanci
 
 - MS Visual studio IDE
 - C++ SDK (part of MSVS)
-- DMCTK [1] binaries and DLL's (included, and automatically setup)
+- DMCTK [1] binaries and DLL's (included, and automatically setup. Must be in a dmctk directory in the working directory)
 
-To setup, simply clone this repository and run the setup file, "setup.bat". That is all. Then you can open the project in MSVS and build as normal. (NOTE: as of 07/02/19, compiler warnings may be raised regarding the inputs to ``_RAISE``. You can safely ignore these for now. 
+To setup, simply clone this repository. The file setup.bat will install the DMCTK package if needed however these files are already in the repository so you can open the project in MSVS and build as normal. (NOTE: as of 07/02/19, compiler warnings may be raised regarding the inputs to ``_RAISE``. You can safely ignore these for now. 
 
 ## Usage ##
 
@@ -26,7 +26,9 @@ Upon running, the user interface should make things quite clear and self explana
 
 <a href="https://imgur.com/OkvS8sK"><img src="https://i.imgur.com/OkvS8sK.jpg" title="source: imgur.com" width="100%"/></a>
 
-From here you can load images, apply filters and save them (converting automatically as appropriate). Of course, this requires some background knowledge from the user in that images should be loaded first, and the order in which filters should be applied etc. However anyone who has to examine DICOM files as a profession should be more than capable of understanding this. 
+An import note is that filters can only be applied to a file in bmp format. If a file is the dicom format it needs to be saved as a bmp first, then reloaded (A function to this without the need to save and then reload is a future improvement that would be implemeneted time permitting).
+
+From here you can load images, apply filters and save them (converting automatically as appropriate). Of course, this requires some background knowledge from the user in that images should be loaded first, and the order in which filters should be applied etc. However anyone who has to examine DICOM files as a profession should be more than capable of understanding this.
 
 Having all these filters, and being able to use them in various orders does mean that you can apply very complicated operations to the images quite easily. Experiment around if you like, but the reccomended order for colourful images is greyscale -> threshold -> omni/bi directional and for relativley monochromatic images (like X-ray scans), simply avoid the thresholding step.
 

@@ -368,8 +368,11 @@ string method: which variant of the laplace filter to apply
 		for (int j = 1; j < (this->dim_x - 1); j++)  // col j
 			for (int n = 0; n < 3; n++)  // color n
 			{
-				raw_filtered[this->i(i, j, n)] = (raw_filtered[this->i(i, j, n)] - min_intensity) /
-												 (max_intensity - min_intensity) * 255.0f;
+				if (this->bit_depth == 24)
+				{
+					raw_filtered[this->i(i, j, n)] = (raw_filtered[this->i(i, j, n)] - min_intensity) /
+													 (max_intensity - min_intensity) * 255.0f;
+				}
 				this->data_pointer[this->i(i, j, n)] = (uint8_t)raw_filtered[this->i(i, j, n)];
 			}
 

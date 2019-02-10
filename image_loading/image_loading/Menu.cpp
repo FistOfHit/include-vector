@@ -2,7 +2,7 @@
 #include "image.h"
 
 	// Basic input validation
-string validate_string(string must_have)
+string validate_name(bool bmp = true, bool dcm = true)
 /*
 Makes sure the input filepaths are valid - i.e if the has the correct
 extension and does not contain space (we dont like spaces in windows)

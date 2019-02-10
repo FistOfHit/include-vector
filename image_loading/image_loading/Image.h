@@ -16,6 +16,7 @@ public:
 	int dim_x = -1;
 	int dim_y = -1;
 	int size = -1;
+	uint8_t bit_depth = -1; // new class attribute, determines how we index the image
 	string abs_direct = "";
 
 		// all images must be able to save to bmp

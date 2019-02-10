@@ -8,7 +8,7 @@
 Capability developed to support the interpretation of medical images by enchancing visual edges on the images, intended originally for enchancing x-ray scans but can be applied to any image theorietically. Developed as part of ACSE-5 (2019) at Imperial College London.
 
 ## Summary ##
-- Read DICOM images, convert to BMP and back to DICOM
+- Read DICOM images, convert to BMP and back to DICOM - supports both 24-bit and 8-bit depth images (almost all BMP and DICOM images)
 - Invert colors, apply greyscaling, thresholding, and use convolutional filters for edge enchancement
 - One-click setup, and simple user interface with minimal input required. 
 
